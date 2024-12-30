@@ -1,9 +1,38 @@
+<?php
+// Database connection
+$host = 'localhost'; // Your DB host
+$dbname = 'cinemax'; // Your DB name
+$username = 'root'; // Your DB username
+$password = ''; // Your DB password
+
+// Create connection
+$conn = new mysqli($host, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Fetch admins
+$sql = "SELECT id, name, email FROM admins";
+$result = $conn->query($sql);
+$admins = [];
+
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $admins[] = $row;
+    }
+}
+
+// Close connection
+$conn->close();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - Manage Users</title>
+    <title>Admin Panel - Manage Admins</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -45,7 +74,7 @@
         }
 
         .content {
-            margin-left: 220px;
+            margin-left: 300px;
             padding: 20px;
             width: calc(100% - 220px);
         }
@@ -53,14 +82,12 @@
         h1 {
             font-size: 36px;
             margin-bottom: 20px;
-            margin-left: 30px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
-            margin-left: 30px;
         }
 
         table th, table td {
@@ -71,24 +98,37 @@
 
         table th {
             background-color: #f4f4f4;
-            
         }
 
-        button {
-            background-color: #d9534f;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container input, .form-container button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
             border-radius: 4px;
         }
 
+        button {
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
         button:hover {
-            background-color: #c9302c;
+            background-color: #4cae4c;
         }
     </style>
 </head>
 <body>
+
 <div class="sidebar">
     <h2>Admin Panel</h2>
     <a href="/cinemax/admin/dashboard.php">Dashboard</a>
@@ -99,82 +139,69 @@
 </div>
 
 <div class="content">
-    <h1>Manage Users</h1>
-    <table id="users-table">
+    <h1>Manage Admins</h1>
+
+    <!-- Admin Management Table -->
+    <table id="admins-table">
         <thead>
             <tr>
                 <th>ID</th>
                 <th>Name</th>
                 <th>Email</th>
-                <th>Phone</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            <!-- Users will be dynamically loaded here -->
+            <?php foreach ($admins as $admin): ?>
+                <tr>
+                    <td><?= $admin['id'] ?></td>
+                    <td><?= $admin['name'] ?></td>
+                    <td><?= $admin['email'] ?></td>
+                    <td>
+                        <button onclick="deleteAdmin(<?= $admin['id'] ?>)">Delete</button>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
         </tbody>
     </table>
+
+    <!-- Add Admin Form -->
+    <div class="form-container">
+        <h2>Add New Admin</h2>
+        <form id="add-admin-form" action="add_admin.php" method="POST">
+            <input type="text" name="name" placeholder="Name" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">Add Admin</button>
+        </form>
+    </div>
 </div>
 
 <script>
-    // Fetch Users from the server
-    function fetchUsers() {
-        fetch('fetch_users.php')
-            .then(response => response.json())
-            .then(data => {
-                const tbody = document.querySelector('#users-table tbody');
-                tbody.innerHTML = ''; // Clear previous data
-                if (data.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5">No users found.</td></tr>';
-                } else {
-                    data.forEach(user => {
-                        const row = `
-                            <tr>
-                                <td>${user.id}</td>
-                                <td>${user.name}</td>
-                                <td>${user.email}</td>
-                                <td>${user.phone}</td>
-                                <td>
-                                    <button onclick="deleteUser(${user.id})">Delete</button>
-                                </td>
-                            </tr>
-                        `;
-                        tbody.innerHTML += row;
-                    });
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching users:', error);
-                alert('There was an error loading the user data.');
-            });
-    }
-
-    // Delete User
-    function deleteUser(userId) {
-        if (confirm('Are you sure you want to delete this user?')) {
-            fetch('delete_user.php', {
+    // Delete Admin
+    function deleteAdmin(adminId) {
+        if (confirm('Are you sure you want to delete this admin?')) {
+            fetch('delete_admin.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user_id: userId })
+                body: JSON.stringify({ id: adminId })
             })
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    alert('User deleted successfully!');
-                    fetchUsers(); // Refresh the user list
+                    alert('Admin deleted successfully!');
+                    location.reload(); // Refresh the page
                 } else {
-                    alert('Error deleting user: ' + data.message);
+                    alert('Error deleting admin: ' + data.message);
                 }
             })
             .catch(error => {
-                console.error('Error deleting user:', error);
-                alert('There was an error deleting the user.');
+                console.error('Error deleting admin:', error);
+                alert('There was an error deleting the admin.');
             });
         }
     }
-
-    // Load users when the page is loaded
-    window.onload = fetchUsers;
 </script>
+
 </body>
 </html>
