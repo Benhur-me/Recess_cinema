@@ -1,10 +1,19 @@
 <?php
 include '../db.php';
 
+session_start();
+
+// Check if the admin is logged in, if not, redirect to login page
+if (!isset($_SESSION['admin_id'])) {
+    header("Location: admin_login.php");
+    exit();
+}
+
 // Fetch total counts
 $total_movies = $conn->query("SELECT COUNT(*) AS total FROM movies")->fetch_assoc()['total'];
 $total_users = $conn->query("SELECT COUNT(*) AS total FROM users")->fetch_assoc()['total'];
 $total_bookings = $conn->query("SELECT COUNT(*) AS total FROM bookings")->fetch_assoc()['total'];
+$total_admins = $conn->query("SELECT COUNT(*) AS total FROM admins")->fetch_assoc()['total'];
 
 ?>
 
@@ -13,7 +22,7 @@ $total_bookings = $conn->query("SELECT COUNT(*) AS total FROM bookings")->fetch_
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - Manage Movies</title>
+    <title>Admin Panel - Dashboard</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -25,16 +34,16 @@ $total_bookings = $conn->query("SELECT COUNT(*) AS total FROM bookings")->fetch_
 
         /* Sidebar Styles */
         .sidebar {
-    width: 200px; /* Reduced width from 250px to 200px */
-    height: 100vh;
-    background-color: #333;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    position: fixed;
-}
+            width: 200px;
+            height: 100vh;
+            background-color: #333;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            position: fixed;
+        }
 
         .sidebar h2 {
             font-size: 24px;
@@ -57,66 +66,14 @@ $total_bookings = $conn->query("SELECT COUNT(*) AS total FROM bookings")->fetch_
 
         /* Main Content Styles */
         .content {
-            margin-left: 300px; /* Adjust to match the new sidebar width (200px + 20px padding) */
+            margin-left: 300px;
             padding: 20px;
-            width: calc(100% - 220px); /* Dynamically adjusts to fit the remaining space */
-}
+            width: calc(100% - 220px);
+        }
 
         h1 {
             font-size: 36px;
             margin-bottom: 20px;
-        }
-
-        h2 {
-            font-size: 28px;
-            margin-bottom: 15px;
-        }
-
-        .movie {
-            background-color: #fff;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .movie img {
-            max-width: 200px;
-            max-height: 300px;
-            border-radius: 5px;
-            margin-top: 10px;
-        }
-
-        .button {
-            padding: 10px 20px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .button:hover {
-            background-color: #0056b3;
-        }
-
-        .edit-form {
-            background-color: #fff;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .edit-form input {
-            padding: 10px;
-            width: 100%;
-            margin-bottom: 10px;
-        }
-
-        .content {
-            margin-left: 20%;
-            padding: 20px;
         }
 
         .dashboard-cards {
@@ -131,6 +88,7 @@ $total_bookings = $conn->query("SELECT COUNT(*) AS total FROM bookings")->fetch_
             padding: 20px;
             flex: 1;
             text-align: center;
+            cursor: pointer;
         }
 
         .card h3 {
@@ -143,11 +101,12 @@ $total_bookings = $conn->query("SELECT COUNT(*) AS total FROM bookings")->fetch_
             font-weight: bold;
             color: #007BFF;
         }
-        .content {
-            margin-left: 300px; /* Adjust to match the new sidebar width (200px + 20px padding) */
-            padding: 20px;
-            width: calc(100% - 220px);
-        } 
+
+        /* Add hover effect to cards */
+        .card:hover {
+            transform: scale(1.05);
+        }
+
     </style>
 </head>
 <body>
@@ -158,23 +117,27 @@ $total_bookings = $conn->query("SELECT COUNT(*) AS total FROM bookings")->fetch_
     <a href="/cinemax/admin/admin.php">Manage Movies</a>
     <a href="/cinemax/admin/manage_users.php">Manage Users</a>
     <a href="/cinemax/admin/manage_admins.php">Manage Admins</a>
-    <a href="/cinemax/admin/logout.php">Logout</a>
+    <a href="/cinemax/admin/admin_logout.php">Logout</a>
 </div>
 
 <div class="content">
     <h1>Dashboard</h1>
     <div class="dashboard-cards">
-        <div class="card">
+        <div class="card" onclick="window.location.href='admin.php';">
             <h3>Total Movies</h3>
             <p><?php echo $total_movies; ?></p>
         </div>
-        <div class="card">
+        <div class="card" onclick="window.location.href='manage_users.php';">
             <h3>Total Users</h3>
             <p><?php echo $total_users; ?></p>
         </div>
-        <div class="card">
+        <div class="card" onclick="window.location.href='#'">
             <h3>Total Bookings</h3>
             <p><?php echo $total_bookings; ?></p>
+        </div>
+        <div class="card" onclick="window.location.href='manage_admins.php';">
+            <h3>Total Admins</h3>
+            <p><?php echo $total_admins; ?></p>
         </div>
     </div>
 </div>

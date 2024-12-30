@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Prepare SQL query to check if the email exists
-    $sql = "SELECT id, email, password, name FROM users WHERE email = ?";
+    $sql = "SELECT id, email, password FROM users WHERE email = ?";
     $stmt = $conn->prepare($sql);
 
     if ($stmt === false) {
@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Check if the user exists
     if ($stmt->num_rows == 1) {
         // Bind result variables
-        $stmt->bind_result($id, $db_email, $db_password, $name);
+        $stmt->bind_result($id, $db_email, $db_password);
         $stmt->fetch();
 
         // Verify the password
@@ -39,9 +39,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             session_start();
             $_SESSION['user_id'] = $id;
             $_SESSION['email'] = $db_email;
-            $_SESSION['user_name'] = $name;  // Store the user's name
 
-            // Redirect to index.php after successful login
+            // Redirect to a protected page (e.g., dashboard or homepage)
             header("Location: index.php");
             exit;
         } else {
@@ -56,7 +55,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $conn->close();
 }
 ?>
-
 
 
 <!DOCTYPE html>
