@@ -117,6 +117,7 @@ $total_admins = $conn->query("SELECT COUNT(*) AS total FROM admins")->fetch_asso
     <a href="/cinemax/admin/admin.php">Manage Movies</a>
     <a href="/cinemax/admin/manage_users.php">Manage Users</a>
     <a href="/cinemax/admin/manage_admins.php">Manage Admins</a>
+    <a href="/cinemax/admin/manage_bookings.php">Manage Bookings</a>
     <a href="/cinemax/admin/admin_logout.php">Logout</a>
 </div>
 
@@ -131,7 +132,7 @@ $total_admins = $conn->query("SELECT COUNT(*) AS total FROM admins")->fetch_asso
             <h3>Total Users</h3>
             <p><?php echo $total_users; ?></p>
         </div>
-        <div class="card" onclick="window.location.href='#'">
+        <div class="card" onclick="window.location.href='manage_bookings.php'">
             <h3>Total Bookings</h3>
             <p><?php echo $total_bookings; ?></p>
         </div>

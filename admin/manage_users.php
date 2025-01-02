@@ -95,6 +95,7 @@
     <a href="/cinemax/admin/admin.php">Manage Movies</a>
     <a href="/cinemax/admin/manage_users.php">Manage Users</a>
     <a href="/cinemax/admin/manage_admins.php">Manage Admins</a>
+    <a href="/cinemax/admin/manage_bookings.php">Manage Bookings</a>
     <a href="/cinemax/admin/logout.php">Logout</a>
 </div>
 
