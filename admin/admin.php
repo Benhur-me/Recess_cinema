@@ -77,6 +77,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_movie'])) {
 // Fetch all movies for display
 $sql = "SELECT * FROM movies";
 $result = $conn->query($sql);
+
+// Fetch movie details for editing
+$movie_to_edit = null;
+if (isset($_GET['edit_id'])) {
+    $movie_id = $_GET['edit_id'];
+    $sql_edit = "SELECT * FROM movies WHERE id = $movie_id";
+    $movie_to_edit = $conn->query($sql_edit)->fetch_assoc();
+}
 ?>
 
 <!DOCTYPE html>
@@ -94,18 +102,17 @@ $result = $conn->query($sql);
             background-color: #f4f4f4;
         }
 
-        /* Sidebar Styles */
         .sidebar {
-    width: 200px; /* Reduced width from 250px to 200px */
-    height: 100vh;
-    background-color: #333;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    position: fixed;
-}
+            width: 200px;
+            height: 100vh;
+            background-color: #333;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            position: fixed;
+        }
 
         .sidebar h2 {
             font-size: 24px;
@@ -126,12 +133,11 @@ $result = $conn->query($sql);
             background-color: #575757;
         }
 
-        /* Main Content Styles */
         .content {
-            margin-left: 300px; /* Adjust to match the new sidebar width (200px + 20px padding) */
+            margin-left: 300px;
             padding: 20px;
-            width: calc(100% - 220px); /* Dynamically adjusts to fit the remaining space */
-}
+            width: calc(100% - 220px);
+        }
 
         h1 {
             font-size: 36px;
@@ -198,7 +204,6 @@ $result = $conn->query($sql);
     <a href="/cinemax/admin/logout.php">Logout</a>
 </div>
 
-
 <div class="content">
     <h1>Admin Panel - Manage Movies</h1>
 
@@ -218,6 +223,25 @@ $result = $conn->query($sql);
 
         <button type="submit" name="add_movie" class="button">Add Movie</button>
     </form>
+
+    <h2>Edit Movie</h2>
+    <?php
+    if ($movie_to_edit) {
+        echo "<form method='POST' action='admin.php' enctype='multipart/form-data'>";
+        echo "<input type='hidden' name='movie_id' value='" . $movie_to_edit['id'] . "'>";
+        echo "<input type='hidden' name='existing_poster' value='" . $movie_to_edit['poster'] . "'>";
+        echo "<label for='title'>Movie Title:</label><br>";
+        echo "<input type='text' id='title' name='title' value='" . $movie_to_edit['title'] . "' required><br><br>";
+        echo "<label for='show_time'>Show Time:</label><br>";
+        echo "<input type='datetime-local' id='show_time' name='show_time' value='" . $movie_to_edit['show_time'] . "' required><br><br>";
+        echo "<label for='price'>Price (UGX):</label><br>";
+        echo "<input type='number' id='price' name='price' value='" . $movie_to_edit['price'] . "' step='0.01' required><br><br>";
+        echo "<label for='poster'>Movie Poster:</label><br>";
+        echo "<input type='file' id='poster' name='poster'><br><br>";
+        echo "<button type='submit' name='edit_movie' class='button'>Update Movie</button>";
+        echo "</form>";
+    }
+    ?>
 
     <h2>Current Movies</h2>
     <?php
@@ -244,4 +268,3 @@ $result = $conn->query($sql);
 
 </body>
 </html>
-

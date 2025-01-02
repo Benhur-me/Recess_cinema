@@ -9,12 +9,24 @@ if (!isset($_SESSION['admin_id'])) {
     exit();
 }
 
+// Fetch admin details
+$admin_id = $_SESSION['admin_id'];
+$admin_query = $conn->prepare("SELECT name FROM admins WHERE id = ?");
+$admin_query->bind_param("i", $admin_id);
+$admin_query->execute();
+$admin_result = $admin_query->get_result();
+
+if ($admin_result->num_rows > 0) {
+    $admin_name = $admin_result->fetch_assoc()['name'];
+} else {
+    $admin_name = "Admin"; // Default fallback
+}
+
 // Fetch total counts
 $total_movies = $conn->query("SELECT COUNT(*) AS total FROM movies")->fetch_assoc()['total'];
 $total_users = $conn->query("SELECT COUNT(*) AS total FROM users")->fetch_assoc()['total'];
 $total_bookings = $conn->query("SELECT COUNT(*) AS total FROM bookings")->fetch_assoc()['total'];
 $total_admins = $conn->query("SELECT COUNT(*) AS total FROM admins")->fetch_assoc()['total'];
-
 ?>
 
 <!DOCTYPE html>
@@ -107,6 +119,27 @@ $total_admins = $conn->query("SELECT COUNT(*) AS total FROM admins")->fetch_asso
             transform: scale(1.05);
         }
 
+        /* Welcome Message Styles */
+        .welcome-message {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: auto;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .welcome-message.hidden {
+            opacity: 0;
+        }
     </style>
 </head>
 <body>
@@ -122,6 +155,11 @@ $total_admins = $conn->query("SELECT COUNT(*) AS total FROM admins")->fetch_asso
 </div>
 
 <div class="content">
+    <!-- Welcome Message -->
+    <div id="welcomeMessage" class="welcome-message">
+        Welcome, <?php echo htmlspecialchars($admin_name); ?>!
+    </div>
+
     <h1>Dashboard</h1>
     <div class="dashboard-cards">
         <div class="card" onclick="window.location.href='admin.php';">
@@ -142,6 +180,17 @@ $total_admins = $conn->query("SELECT COUNT(*) AS total FROM admins")->fetch_asso
         </div>
     </div>
 </div>
+
+<script>
+    // Hide the welcome message after 3 seconds
+    setTimeout(() => {
+        const message = document.getElementById('welcomeMessage');
+        message.classList.add('hidden');
+        setTimeout(() => {
+            message.style.display = 'none';
+        }, 500); // Wait for transition to complete
+    }, 3000);
+</script>
 
 </body>
 </html>
