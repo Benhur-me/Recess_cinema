@@ -71,13 +71,55 @@ if (isset($_POST['book_now'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cinema Booking System</title>
     <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
     <style>
         /* Basic styling for the page */
+        * {
+            font-family: 'Roboto', Arial, sans-serif;
+            font-style: normal;
+            font-weight: 400;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', Arial, sans-serif;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f4;
+        }
+
+        /* Sidebar Styles */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100%;
+    background-color: #333;
+    color: white;
+    padding-top: 20px;
+}
+
+        .sidebar a {
+            display: block;
+            padding: 15px;
+            color: white;
+            text-decoration: none;
+            margin: 10px 0;
+        }
+
+        .sidebar a:hover {
+            background-color: #575757;
         }
 
         h3 {
@@ -154,7 +196,7 @@ if (isset($_POST['book_now'])) {
             color: white;
             font-size: 18px;
             text-align: center;
-            z-index: 9999;  /* Ensure the alert is always on top */
+            z-index: 9999;
             display: none;
         }
 
@@ -164,79 +206,156 @@ if (isset($_POST['book_now'])) {
         }
 
         /* Styling for movie list container */
-    #movie-list {
-        display: flex;
-        flex-wrap: wrap; /* Allow wrapping to the next row if there's not enough space */
-        gap: 20px; /* Add spacing between movies */
-        justify-content: center; /* Center the movies horizontally */
+        #movie-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .movie {
+            flex: 1 1 300px;
+            max-width: 300px;
+            background-color: #fff;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .movie img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .book-now-btn {
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            background-color: #333;
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul li {
+            flex: 1;
+            text-align: center;
+        }
+
+        nav ul li a {
+            display: block;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: white;
+            background-color: #333;
+        }
+
+        nav ul li a:hover {
+            background-color: #555;
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background-color: #d32f2f;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .logout-btn:hover {
+            background-color: #b71c1c;
+        }
+
+        body, .sidebar, .movie, nav ul, .book-now-btn, .alert, .user-initials {
+            font-family: "Roboto", Arial, sans-serif;
+        }
+
+        .sidebar {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .movie {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .book-now-btn, .logout-btn {
+            font-family: "Roboto", Arial, sans-serif;
+            font-weight: bold;
+        }
+
+  
+
+/* Add padding to the main content section to avoid overlap with the sidebar */
+#user-interface {
+    margin-left: 270px; /* Adjust this to add space between the sidebar and the content */
+    padding-right: 20px; /* Add space on the right side of the content */
 }
 
-/* Styling for individual movie cards */
+
+/* Styling for movie list container */
+#movie-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin-left: 20px; /* Adds a small gap between the sidebar and the content */
+}
+
+
+/* Ensure movie item does not stretch too much */
 .movie {
-    flex: 1 1 300px; /* Flexible width with a minimum size of 300px */
-    max-width: 300px; /* Ensure movies don't exceed 300px in width */
+    flex: 1 1 300px;
+    max-width: 300px;
     background-color: #fff;
     padding: 15px;
     margin-bottom: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center; /* Center-align text */
-}
-
-.movie img {
-    width: 100%; /* Make the image take up the full width of the container */
-    height: auto; /* Maintain the aspect ratio */
-    border-radius: 5px;
-    margin-top: 10px;
-}
-
-.book-now-btn {
-    display: inline-block;
-    margin-top: 10px; /* Add spacing above the button */
-}
-
-nav ul {
-    display: flex;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    background-color: #333;
-    overflow: hidden;
-}
-
-nav ul li {
-    flex: 1; /* Evenly distribute space */
     text-align: center;
 }
 
-nav ul li a {
-    display: block;
-    padding: 10px 20px;
-    text-decoration: none;
-    color: white;
-    background-color: #333;
-}
 
-nav ul li a:hover {
-    background-color: #555;
-}
-
-@media screen and (max-width: 600px) {
-    nav ul {
-        flex-direction: column; /* Stack items vertically on small screens */
-    }
-}
-
+        @media screen and (max-width: 600px) {
+            nav ul {
+                flex-direction: column;
+            }
+        }
 
     </style>
 </head>
 <body>
+
+<div class="sidebar">
+    <a href="home.php">Home</a>
+    <a href="index.php">Movies</a>
+    <a href="about.php">About</a>
+    <a href="contact.php">Contact</a>
+    <a href="user/logout.php">Logout</a>
+</div>
     <header>
         <center><h1>Online Cinema Booking</h1></center>
-    <nav>
+        <nav>
             <ul>
-                <li><a href="logout.php">Logout</a></li>
+                <!-- Other menu items here -->
             </ul>
+            
         </nav>
     </header>
 
@@ -247,7 +366,7 @@ nav ul li a:hover {
 
     <main>
         <section id="user-interface">
-            <h2>Available Movies</h2>
+            <center><h2>Available Movies</h2></center>
             <div id="movie-list">
                 <?php
                 // Fetch all movies for users to view
@@ -287,7 +406,7 @@ nav ul li a:hover {
     </main>
 
     <footer>
-        <p>&copy; 2024 Cinema Booking System</p>
+        <center><p>&copy; 2024 Cinema Booking System</p></center>
     </footer>
 
     <!-- Booking Success Message -->
@@ -308,20 +427,20 @@ nav ul li a:hover {
 
     <script>
         // Show the success alert when booking is successful
-        if (document.getElementById('bookingSuccessAlert')) {
+        <?php if (isset($_SESSION['booking_success']) && $_SESSION['booking_success']): ?>
             document.getElementById('bookingSuccessAlert').style.display = 'block';
             setTimeout(function() {
                 document.getElementById('bookingSuccessAlert').style.display = 'none';
-            }, 5000);  // Hide the alert after 5 seconds
-        }
+            }, 5000); // Hide the alert after 5 seconds
+        <?php endif; ?>
 
-        // Show the error alert when there's an issue with booking
-        if (document.getElementById('bookingErrorAlert')) {
+        // Show the error alert when booking fails
+        <?php if (isset($_SESSION['booking_error']) && $_SESSION['booking_error']): ?>
             document.getElementById('bookingErrorAlert').style.display = 'block';
             setTimeout(function() {
                 document.getElementById('bookingErrorAlert').style.display = 'none';
-            }, 5000);  // Hide the alert after 5 seconds
-        }
+            }, 5000); // Hide the alert after 5 seconds
+        <?php endif; ?>
     </script>
 </body>
 </html>

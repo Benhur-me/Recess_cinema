@@ -201,7 +201,7 @@ if (isset($_GET['edit_id'])) {
     <a href="/cinemax/admin/manage_users.php">Manage Users</a>
     <a href="/cinemax/admin/manage_admins.php">Manage Admins</a>
     <a href="/cinemax/admin/manage_bookings.php">Manage Bookings</a>
-    <a href="/cinemax/admin/logout.php">Logout</a>
+    <a href="/cinemax/admin/admin_logout.php">Logout</a>
 </div>
 
 <div class="content">
