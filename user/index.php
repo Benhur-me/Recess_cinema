@@ -108,6 +108,7 @@ if (isset($_POST['book_now'])) {
     background-color: #333;
     color: white;
     padding-top: 20px;
+    border: px solid black;
 }
 
         .sidebar a {
@@ -116,12 +117,12 @@ if (isset($_POST['book_now'])) {
             color: white;
             text-decoration: none;
             margin: 10px 0;
+            border: px solid black;
         }
 
         .sidebar a:hover {
             background-color: #575757;
         }
-
         h3 {
             font-size: 24px;
             color: #333;
@@ -343,12 +344,13 @@ if (isset($_POST['book_now'])) {
 <body>
 
 <div class="sidebar">
-    <a href="home.php">Home</a>
-    <a href="index.php">Movies</a>
-    <a href="about.php">About</a>
-    <a href="contact.php">Contact</a>
-    <a href="user/logout.php">Logout</a>
-</div>
+        <a href="home.php">Home</a>
+        <a href="index.php">Movies</a>
+        <a href="about.php">About</a>
+        <a href="contact.php">Contact</a>
+        <a href="user/logout.php">Logout</a>
+    </div>
+
     <header>
         <center><h1>Online Cinema Booking</h1></center>
         <nav>

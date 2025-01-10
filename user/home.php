@@ -19,17 +19,16 @@
 
         /* Sidebar styling */
         .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 250px;
-            height: 100%;
-            background-color: #333;
-            color: white;
-            padding-top: 20px;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-            font-family: 'Raleway', Arial, sans-serif;
-        }
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100%;
+    background-color: #333;
+    color: white;
+    padding-top: 20px;
+    border: px solid black;
+}
 
         .sidebar a {
             display: block;
@@ -37,15 +36,11 @@
             color: white;
             text-decoration: none;
             margin: 10px 0;
-            font-size: 16px;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            border: px solid black;
         }
 
         .sidebar a:hover {
             background-color: #575757;
-            color: #f4f4f4;
         }
 
         /* Main content */
@@ -113,7 +108,7 @@
         <a href="index.php">Movies</a>
         <a href="about.php">About</a>
         <a href="contact.php">Contact</a>
-        <a href="logout.php">Logout</a>
+        <a href="user/logout.php">Logout</a>
     </div>
 
     
