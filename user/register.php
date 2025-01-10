@@ -2,6 +2,8 @@
 // Include the database connection file
 include '../db.php';
 
+$error_message = ""; // Variable to store error messages
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['email'], $_POST['password'], $_POST['confirm_password'], $_POST['name'], $_POST['phone'])) {
         $email = $_POST['email'];
@@ -10,34 +12,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $name = $_POST['name'];
         $phone = $_POST['phone'];
 
+        // Validate passwords
         if ($password != $confirm_password) {
-            echo "Passwords do not match!";
-            exit;
-        }
-
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-
-        $sql = "INSERT INTO users (name, email, password, phone) VALUES (?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
-
-        if ($stmt === false) {
-            echo "Error preparing the query: " . $conn->error;
-            exit;
-        }
-
-        $stmt->bind_param("ssss", $name, $email, $hashed_password, $phone);
-
-        if ($stmt->execute()) {
-            header("Location: login.php");
-            exit;
+            $error_message = "Passwords do not match!";
         } else {
-            echo "Error executing the statement: " . $stmt->error;
-        }
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-        $stmt->close();
-        $conn->close();
+            // Insert data into the database
+            $sql = "INSERT INTO users (name, email, password, phone) VALUES (?, ?, ?, ?)";
+            $stmt = $conn->prepare($sql);
+
+            if ($stmt === false) {
+                $error_message = "Error preparing the query: " . $conn->error;
+            } else {
+                $stmt->bind_param("ssss", $name, $email, $hashed_password, $phone);
+
+                if ($stmt->execute()) {
+                    // Redirect to login page on success
+                    header("Location: login.php");
+                    exit;
+                } else {
+                    $error_message = "Error executing the statement: " . $stmt->error;
+                }
+
+                $stmt->close();
+            }
+
+            $conn->close();
+        }
     } else {
-        echo "All fields are required!";
+        $error_message = "All fields are required!";
     }
 }
 ?>
@@ -100,6 +104,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             background: #ffffff;
         }
 
+        .error {
+            color: #d9534f;
+            background: #f9d6d5;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #d9534f;
+            border-radius: 5px;
+            font-size: 0.9em;
+            text-align: center;
+        }
+
         button {
             width: 100%;
             padding: 10px;
@@ -136,6 +151,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <form action="register.php" method="POST">
         <h1>Register</h1>
+        <?php if (!empty($error_message)): ?>
+            <div class="error"><?php echo $error_message; ?></div>
+        <?php endif; ?>
         <label>Email:</label>
         <input type="email" name="email" placeholder="Enter your email" required>
         <label>Password:</label>

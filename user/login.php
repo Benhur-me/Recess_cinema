@@ -2,6 +2,8 @@
 // Include the database connection file
 include '../db.php';
 
+$error_message = ''; // Variable to store error messages
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get form data
     $email = $_POST['email'];
@@ -9,49 +11,49 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Check if email and password are provided
     if (empty($email) || empty($password)) {
-        echo "Please enter both email and password!";
-        exit;
-    }
-
-    // Prepare SQL query to check if the email exists
-    $sql = "SELECT id, email, password FROM users WHERE email = ?";
-    $stmt = $conn->prepare($sql);
-
-    if ($stmt === false) {
-        echo "Error preparing the query: " . $conn->error;
-        exit;
-    }
-
-    // Bind email parameter and execute query
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $stmt->store_result();
-
-    // Check if the user exists
-    if ($stmt->num_rows == 1) {
-        // Bind result variables
-        $stmt->bind_result($id, $db_email, $db_password);
-        $stmt->fetch();
-
-        // Verify the password
-        if (password_verify($password, $db_password)) {
-            // Start session and store user info
-            session_start();
-            $_SESSION['user_id'] = $id;
-            $_SESSION['email'] = $db_email;
-
-            // Redirect to a protected page (e.g., dashboard or homepage)
-            header("Location: index.php");
-            exit;
-        } else {
-            echo "Invalid login credentials!";
-        }
+        $error_message = "Please enter both email and password!";
     } else {
-        echo "Invalid login credentials!";
+        // Prepare SQL query to check if the email exists
+        $sql = "SELECT id, email, password FROM users WHERE email = ?";
+        $stmt = $conn->prepare($sql);
+
+        if ($stmt === false) {
+            $error_message = "Error preparing the query: " . $conn->error;
+        } else {
+            // Bind email parameter and execute query
+            $stmt->bind_param("s", $email);
+            $stmt->execute();
+            $stmt->store_result();
+
+            // Check if the user exists
+            if ($stmt->num_rows == 1) {
+                // Bind result variables
+                $stmt->bind_result($id, $db_email, $db_password);
+                $stmt->fetch();
+
+                // Verify the password
+                if (password_verify($password, $db_password)) {
+                    // Start session and store user info
+                    session_start();
+                    $_SESSION['user_id'] = $id;
+                    $_SESSION['email'] = $db_email;
+
+                    // Redirect to a protected page (e.g., dashboard or homepage)
+                    header("Location: index.php");
+                    exit;
+                } else {
+                    $error_message = "Invalid credentials!";
+                }
+            } else {
+                $error_message = "Invalid credentials!";
+            }
+
+            // Close statement
+            $stmt->close();
+        }
     }
 
-    // Close statement and connection
-    $stmt->close();
+    // Close connection
     $conn->close();
 }
 ?>
@@ -88,6 +90,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             color: #333;
             margin-bottom: 20px;
             font-size: 1.5em;
+        }
+
+        .error-message {
+            color: #d32f2f;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 0.9em;
         }
 
         label {
@@ -150,6 +163,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <form action="" method="POST">
         <h1>Login</h1>
+        <?php if (!empty($error_message)) : ?>
+            <div class="error-message">
+                <?php echo htmlspecialchars($error_message); ?>
+            </div>
+        <?php endif; ?>
         <label>Email:</label>
         <input type="email" name="email" placeholder="Enter your email" required>
         <label>Password:</label>
