@@ -135,6 +135,7 @@
         <a href="index.php">Movies</a>
         <a href="about.php">About</a>
         <a href="contact.php">Contact</a>
+        <a href="accounts.php">Account</a>
         <a href="logout.php">Logout</a>
     </div>
 
