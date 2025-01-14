@@ -24,9 +24,10 @@
     left: 0;
     width: 250px;
     height: 100%;
-    background-color: #333;
+    background-color: #1f1f1f;
     color: white;
-    padding-top: 20px;
+    padding-top: 30px;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
     border: px solid black;
 }
 
@@ -37,9 +38,12 @@
             text-decoration: none;
             margin: 10px 0;
             border: px solid black;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
         }
 
         .sidebar a:hover {
+            border-left: 3px solid #ff6f61;
             background-color: #575757;
         }
 
@@ -114,7 +118,7 @@
         <a href="index.php">Movies</a>
         <a href="about.php">About</a>
         <a href="contact.php">Contact</a>
-        <a href="user/logout.php">Logout</a>
+        <a href="logout.php">Logout</a>
     </div>
 
     <!-- Main Content -->

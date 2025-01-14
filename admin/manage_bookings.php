@@ -107,6 +107,7 @@ $result = $conn->query($sql);
     <a href="/cinemax/admin/manage_users.php">Manage Users</a>
     <a href="/cinemax/admin/manage_admins.php">Manage Admins</a>
     <a href="/cinemax/admin/manage_bookings.php">Manage Bookings</a>
+    <a href="/cinemax/admin/reports.php">Reports</a>
     <a href="/cinemax/admin/admin_logout.php">Logout</a>
 </div>
 

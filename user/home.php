@@ -11,10 +11,11 @@
             font-family: 'Roboto', Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+            background-color: #f7f7f7;
             display: flex;
             min-height: 100vh;
             flex-direction: column;
+            color: #333;
         }
 
         /* Sidebar styling */
@@ -24,9 +25,10 @@
     left: 0;
     width: 250px;
     height: 100%;
-    background-color: #333;
+    background-color: #1f1f1f;
     color: white;
-    padding-top: 20px;
+    padding-top: 30px;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
     border: px solid black;
 }
 
@@ -37,19 +39,21 @@
             text-decoration: none;
             margin: 10px 0;
             border: px solid black;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
         }
 
         .sidebar a:hover {
+            border-left: 3px solid #ff6f61;
             background-color: #575757;
         }
 
         /* Main content */
         .content {
             margin-left: 260px; /* Sidebar width */
-            padding: 20px;
+            padding: 30px;
             background-color: #fff;
             flex-grow: 1;
-            font-family: 'Roboto', Arial, sans-serif;
         }
 
         h1 {
@@ -62,23 +66,45 @@
         }
 
         .box-shadow {
-            padding: 20px;
+            padding: 30px;
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
             margin-bottom: 30px;
             text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .box-shadow:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.2);
         }
 
         .box-shadow h3 {
             color: #333;
             margin-bottom: 15px;
-            font-size: 24px;
+            font-size: 28px;
+            font-weight: 500;
         }
 
         .box-shadow p {
             color: #777;
             font-size: 18px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #1f1f1f;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        footer p {
+            margin: 0;
         }
 
         /* Mobile responsiveness */
@@ -96,22 +122,22 @@
             }
 
             .box-shadow {
-                padding: 15px;
+                padding: 20px;
             }
         }
     </style>
 </head>
 <body>
+
     <!-- Sidebar -->
     <div class="sidebar">
         <a href="home.php">Home</a>
         <a href="index.php">Movies</a>
         <a href="about.php">About</a>
         <a href="contact.php">Contact</a>
-        <a href="user/logout.php">Logout</a>
+        <a href="logout.php">Logout</a>
     </div>
 
-    
     <!-- Main Content -->
     <div class="content">
         <h1>Welcome to Online Cinema Booking</h1>
@@ -123,7 +149,7 @@
 
         <div class="box-shadow">
             <h3>Our Mission</h3>
-            <p>We strive to provide you with the latest movies, seamless booking experience, and high-quality service to make your cinema visit an unforgettable experience.</p>
+            <p>We strive to provide you with the latest movies, a seamless booking experience, and high-quality service to make your cinema visit unforgettable.</p>
         </div>
 
         <div class="box-shadow">

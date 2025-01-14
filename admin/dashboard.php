@@ -27,6 +27,7 @@ $total_movies = $conn->query("SELECT COUNT(*) AS total FROM movies")->fetch_asso
 $total_users = $conn->query("SELECT COUNT(*) AS total FROM users")->fetch_assoc()['total'];
 $total_bookings = $conn->query("SELECT COUNT(*) AS total FROM bookings")->fetch_assoc()['total'];
 $total_admins = $conn->query("SELECT COUNT(*) AS total FROM admins")->fetch_assoc()['total'];
+$total_reports = $conn->query("SELECT COUNT(*) AS total FROM messages")->fetch_assoc()['total'];  // Added for reports
 ?>
 
 <!DOCTYPE html>
@@ -151,6 +152,7 @@ $total_admins = $conn->query("SELECT COUNT(*) AS total FROM admins")->fetch_asso
     <a href="/cinemax/admin/manage_users.php">Manage Users</a>
     <a href="/cinemax/admin/manage_admins.php">Manage Admins</a>
     <a href="/cinemax/admin/manage_bookings.php">Manage Bookings</a>
+    <a href="/cinemax/admin/reports.php">Reports</a>
     <a href="/cinemax/admin/admin_logout.php">Logout</a>
 </div>
 
@@ -177,6 +179,11 @@ $total_admins = $conn->query("SELECT COUNT(*) AS total FROM admins")->fetch_asso
         <div class="card" onclick="window.location.href='manage_admins.php';">
             <h3>Total Admins</h3>
             <p><?php echo $total_admins; ?></p>
+        </div>
+        <!-- New Reports Card -->
+        <div class="card" onclick="window.location.href='reports.php';">
+            <h3>Total Reports</h3>
+            <p><?php echo $total_reports; ?></p>
         </div>
     </div>
 </div>

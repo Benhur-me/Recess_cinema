@@ -99,15 +99,16 @@ if (isset($_POST['book_now'])) {
         }
 
         /* Sidebar Styles */
-.sidebar {
+        .sidebar {
     position: fixed;
     top: 0;
     left: 0;
     width: 250px;
     height: 100%;
-    background-color: #333;
+    background-color: #1f1f1f;
     color: white;
-    padding-top: 20px;
+    padding-top: 30px;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
     border: px solid black;
 }
 
@@ -118,11 +119,15 @@ if (isset($_POST['book_now'])) {
             text-decoration: none;
             margin: 10px 0;
             border: px solid black;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
         }
 
         .sidebar a:hover {
+            border-left: 3px solid #ff6f61;
             background-color: #575757;
         }
+
         h3 {
             font-size: 24px;
             color: #333;
@@ -276,10 +281,14 @@ if (isset($_POST['book_now'])) {
             padding: 10px 20px;
             border-radius: 5px;
             text-decoration: none;
+            
         }
 
         .logout-btn:hover {
             background-color: #b71c1c;
+        }
+        .logout{
+            background: red;
         }
 
         body, .sidebar, .movie, nav ul, .book-now-btn, .alert, .user-initials {
@@ -301,6 +310,19 @@ if (isset($_POST['book_now'])) {
             font-weight: bold;
         }
 
+        footer {
+            background-color: #1f1f1f;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        footer p {
+            margin: 0;
+        }
   
 
 /* Add padding to the main content section to avoid overlap with the sidebar */
@@ -348,11 +370,11 @@ if (isset($_POST['book_now'])) {
         <a href="index.php">Movies</a>
         <a href="about.php">About</a>
         <a href="contact.php">Contact</a>
-        <a href="user/logout.php">Logout</a>
+        <a href="logout.php">Logout</a>
     </div>
 
     <header>
-        <center><h1>Online Cinema Booking</h1></center>
+        
         <nav>
             <ul>
                 <!-- Other menu items here -->
@@ -408,7 +430,7 @@ if (isset($_POST['book_now'])) {
     </main>
 
     <footer>
-        <center><p>&copy; 2024 Cinema Booking System</p></center>
+        <p>&copy; 2024 Cinema Booking System</p>
     </footer>
 
     <!-- Booking Success Message -->
