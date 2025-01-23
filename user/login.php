@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $_SESSION['user_id'] = $id;
                     $_SESSION['email'] = $db_email;
 
-                    // Redirect to a protected page (e.g., dashboard or homepage)
+                    // Redirect to user dashboard
                     header("Location: index.php");
                     exit;
                 } else {
@@ -63,33 +63,124 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>User Login</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             min-height: 100vh;
-            background-color: #f4f4f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+        }
+
+        @keyframes backgroundShift {
+            0% {
+                background: linear-gradient(120deg, #f6d365, #fda085);
+            }
+            100% {
+                background: linear-gradient(120deg, #a1c4fd, #c2e9fb);
+            }
+        }
+
+        .container {
+            display: flex;
+            width: 80%;
+            max-width: 1000px;
+            background: white;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            overflow: hidden;
+            transform: translateY(20px);
+            animation: slideIn 1s ease-out forwards;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .left-section {
+            flex: 1;
+            background: #007BFF;;
+            color: white;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            animation: fadeIn 2s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .left-section h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            font-weight: bold;
+            animation: bounceIn 1s ease-in-out forwards;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.9);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .left-section p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .left-section img {
+            width: 80%;
+            max-width: 250px;
+            margin: 20px auto 0;
+            border-radius: 8px;
+        }
+
+        .form-section {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         form {
-            background: #ffffff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            width: 300px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
         }
 
         h1 {
             text-align: center;
-            color: #333;
             margin-bottom: 20px;
-            font-size: 1.5em;
+            font-size: 1.8em;
+            color: #555;
         }
 
         .error-message {
@@ -100,7 +191,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             border-radius: 5px;
             margin-bottom: 15px;
             text-align: center;
-            font-size: 0.9em;
         }
 
         label {
@@ -112,35 +202,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         input[type="email"], input[type="password"] {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             margin-bottom: 15px;
             border: 1px solid #ccc;
-            border-radius: 5px;
+            border-radius: 8px;
             font-size: 1em;
             background: #f9f9f9;
-            transition: border-color 0.3s;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         input[type="email"]:focus, input[type="password"]:focus {
-            border-color: #007bff;
+            border-color: #ff7e5f;
             outline: none;
-            background: #ffffff;
+            box-shadow: 0 0 8px rgba(255, 126, 95, 0.2);
         }
 
         button {
             width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            background-color: #007bff;
+            padding: 12px;
+            background-color: #ff7e5f;
             color: white;
+            border: none;
+            border-radius: 8px;
             font-size: 1em;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            background: #007BFF;
         }
 
         button:hover {
-            background-color: #0056b3;
+            background-color: #e74c3c;
+            transform: translateY(-2px);
+            background: #007BFF;
         }
 
         p {
@@ -150,30 +243,49 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         a {
-            color: #007bff;
+            color: #ff7e5f;
             text-decoration: none;
-            transition: color 0.3s;
+            transition: color 0.3s ease;
+            color: #007BFF;
         }
 
         a:hover {
-            color: #0056b3;
+            color: #007BFF;;
         }
     </style>
 </head>
 <body>
-    <form action="" method="POST">
-        <h1>Login</h1>
-        <?php if (!empty($error_message)) : ?>
-            <div class="error-message">
-                <?php echo htmlspecialchars($error_message); ?>
-            </div>
-        <?php endif; ?>
-        <label>Email:</label>
-        <input type="email" name="email" placeholder="Enter your email" required>
-        <label>Password:</label>
-        <input type="password" name="password" placeholder="Enter your password" required>
-        <button type="submit" name="login">Login</button>
-        <p>Don't have an account? <a href="register.php">Register here</a></p>
-    </form>
+    <div class="container">
+        <!-- Left Section -->
+        <div class="left-section">
+            <h2>Welcome Back</h2>
+            <p>
+                Access your personalized user dashboard and stay connected with updates, features, and more!
+            </p>
+            <img src="https://via.placeholder.com/250" alt="User Access">
+        </div>
+
+        <!-- Right Section (Login Form) -->
+        <div class="form-section">
+            <form action="" method="POST">
+                <h1>User Login</h1>
+                <?php if (!empty($error_message)) : ?>
+                    <div class="error-message">
+                        <?php echo htmlspecialchars($error_message); ?>
+                    </div>
+                <?php endif; ?>
+                <label for="email">Email</label>
+                <input type="email" name="email" id="email" placeholder="Enter your email" required>
+
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" placeholder="Enter your password" required>
+
+                <button type="submit">Login</button>
+                <p>
+                    Don't have an account? <a href="register.php">Sign up here</a>
+                </p>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

@@ -170,7 +170,7 @@ $bookings_result = $bookings_query->get_result();
                 <?php endif; ?>
             </tbody>
         </table>
-    </div>
+    </div> 
 </div>
 
 </body>

@@ -137,7 +137,7 @@ $conn->close();
     <a href="/cinemax/admin/manage_admins.php">Manage Admins</a>
     <a href="/cinemax/admin/manage_bookings.php">Manage Bookings</a>
     <a href="/cinemax/admin/reports.php">Reports</a>
-    <a href="/cinemax/admin/logout.php">Logout</a>
+    <a href="/cinemax/admin/admin_logout.php">Logout</a>
 </div>
 
 <div class="content">
