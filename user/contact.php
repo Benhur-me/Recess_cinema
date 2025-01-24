@@ -148,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         footer {
             text-align: center;
             padding: 10px;
-            background-color: #333;
+            background-color: #007BFF;
             color: white;
             margin-left: 260px; /* Align with content */
             width: calc(100% - 260px);

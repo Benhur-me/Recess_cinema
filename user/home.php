@@ -94,7 +94,7 @@
 
         /* Footer */
         footer {
-            background-color: #1f1f1f;
+            background-color: #007BFF;
             color: white;
             text-align: center;
             padding: 15px;
