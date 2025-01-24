@@ -24,7 +24,7 @@
     left: 0;
     width: 250px;
     height: 100%;
-    background-color: #1f1f1f;
+    background-color: #007BFF;
     color: white;
     padding-top: 30px;
     box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);

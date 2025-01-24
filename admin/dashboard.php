@@ -49,7 +49,7 @@ $total_reports = $conn->query("SELECT COUNT(*) AS total FROM messages")->fetch_a
         .sidebar {
             width: 200px;
             height: 100vh;
-            background-color: #333;
+            background-color: #007BFF;
             color: white;
             display: flex;
             flex-direction: column;

@@ -105,7 +105,7 @@ if (isset($_GET['edit_id'])) {
         .sidebar {
             width: 200px;
             height: 100vh;
-            background-color: #333;
+            background-color: #007BFF;
             color: white;
             display: flex;
             flex-direction: column;

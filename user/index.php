@@ -298,6 +298,7 @@ if (isset($_POST['book_now'])) {
         .sidebar {
             font-size: 16px;
             line-height: 1.5;
+            background-color: #007BFF;
         }
 
         .movie {

@@ -47,7 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Raleway:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <style>
         body {
@@ -67,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             left: 0;
             width: 250px;
             height: 100%;
-            background-color: #1f1f1f;
+            background-color: #007BFF;
             color: white;
             padding-top: 30px;
             box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);

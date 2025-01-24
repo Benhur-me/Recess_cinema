@@ -36,7 +36,7 @@ $result = $conn->query($sql);
         .sidebar {
             width: 200px; /* Adjusted width */
             height: 100vh;
-            background-color: #333;
+            background-color: #007BFF;
             color: white;
             display: flex;
             flex-direction: column;
