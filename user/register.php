@@ -61,23 +61,83 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background-color: #f4f4f9;
+            background: linear-gradient(120deg, #a1c4fd, #c2e9fb);
+            animation: backgroundShift 5s infinite alternate;
+        }
+
+        @keyframes backgroundShift {
+            0% {
+                background: linear-gradient(120deg, #f6d365, #fda085);
+            }
+            100% {
+                background: linear-gradient(120deg, #a1c4fd, #c2e9fb);
+            }
+        }
+
+        .container {
+            display: flex;
+            width: 80%;
+            max-width: 1000px;
+            background: white;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            overflow: hidden;
+            transform: translateY(20px);
+            animation: slideIn 1s ease-out forwards;
+        }
+
+        .left-section {
+            flex: 1;
+            background: #007BFF;
+            color: white;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            animation: fadeIn 2s ease-out forwards;
+        }
+
+        .left-section h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .left-section p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .form-section {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         form {
-            background: #ffffff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            width: 350px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
         }
 
         h1 {
             text-align: center;
-            color: #333;
             margin-bottom: 20px;
-            font-size: 1.5em;
+            font-size: 1.8em;
+            color: #555;
+        }
+
+        .error-message {
+            color: #d9534f;
+            background-color: #f9d6d5;
+            border: 1px solid #d9534f;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            text-align: center;
         }
 
         label {
@@ -89,13 +149,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         input[type="email"], input[type="password"], input[type="text"] {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             margin-bottom: 15px;
             border: 1px solid #ccc;
-            border-radius: 5px;
+            border-radius: 8px;
             font-size: 1em;
             background: #f9f9f9;
-            transition: border-color 0.3s;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         input:focus {
@@ -104,20 +164,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             background: #ffffff;
         }
 
-        .error {
-            color: #d9534f;
-            background: #f9d6d5;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #d9534f;
-            border-radius: 5px;
-            font-size: 0.9em;
-            text-align: center;
-        }
-
         button {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             border: none;
             border-radius: 5px;
             background-color: #007bff;
@@ -140,32 +189,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         a {
             color: #007bff;
             text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        a:hover {
-            color: #0056b3;
         }
     </style>
 </head>
 <body>
-    <form action="register.php" method="POST">
-        <h1>Register</h1>
-        <?php if (!empty($error_message)): ?>
-            <div class="error"><?php echo $error_message; ?></div>
-        <?php endif; ?>
-        <label>Email:</label>
-        <input type="email" name="email" placeholder="Enter your email" required>
-        <label>Password:</label>
-        <input type="password" name="password" placeholder="Enter your password" required>
-        <label>Confirm Password:</label>
-        <input type="password" name="confirm_password" placeholder="Confirm your password" required>
-        <label>Name:</label>
-        <input type="text" name="name" placeholder="Enter your full name" required>
-        <label>Phone:</label>
-        <input type="text" name="phone" placeholder="Enter your phone number" required>
-        <button type="submit">Register</button>
-        <p>Already have an account? <a href="login.php">Login here</a></p>
-    </form>
+    <div class="container">
+        <div class="left-section">
+            <h2>Welcome to Registration</h2>
+            <p>Create your account to enjoy exclusive benefits and stay connected with us.</p>
+            <p>Already have an account? <a href="login.php" style="color: white; text-decoration: underline;">Login here</a>.</p>
+        </div>
+        <div class="form-section">
+            <form action="register.php" method="POST">
+                <h1>Register</h1>
+                <?php if (!empty($error_message)): ?>
+                    <div class="error-message"><?php echo $error_message; ?></div>
+                <?php endif; ?>
+                <label>Email:</label>
+                <input type="email" name="email" placeholder="Enter your email" required>
+                <label>Password:</label>
+                <input type="password" name="password" placeholder="Enter your password" required>
+                <label>Confirm Password:</label>
+                <input type="password" name="confirm_password" placeholder="Confirm your password" required>
+                <label>Name:</label>
+                <input type="text" name="name" placeholder="Enter your full name" required>
+                <label>Phone:</label>
+                <input type="text" name="phone" placeholder="Enter your phone number" required>
+                <button type="submit">Register</button>
+                <p>Already have an account? <a href="login.php">Login here</a></p>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
