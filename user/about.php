@@ -15,21 +15,37 @@
             display: flex;
             min-height: 100vh;
             flex-direction: column;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        /* Burger Icon */
+        .burger-icon {
+            display: none; /* Hidden by default */
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: #007BFF;
+            cursor: pointer;
+            padding: 10px;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
         }
 
         /* Sidebar styling */
         .sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 250px;
-    height: 100%;
-    background-color: #007BFF;
-    color: white;
-    padding-top: 30px;
-    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-    border: px solid black;
-}
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100%;
+            background-color: #007BFF;
+            color: white;
+            padding-top: 30px;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
 
         .sidebar a {
             display: block;
@@ -37,7 +53,6 @@
             color: white;
             text-decoration: none;
             margin: 10px 0;
-            border: px solid black;
             border-left: 3px solid transparent;
             transition: all 0.3s ease;
         }
@@ -54,6 +69,7 @@
             background-color: #fff;
             flex-grow: 1;
             font-family: 'Roboto', Arial, sans-serif;
+            transition: margin-left 0.3s ease;
         }
 
         h1 {
@@ -84,21 +100,31 @@
             box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
             font-size: 14px;
             font-family: 'Raleway', Arial, sans-serif;
+            transition: margin-left 0.3s ease;
         }
 
         /* Mobile responsiveness */
         @media screen and (max-width: 768px) {
+            .burger-icon {
+                display: block; /* Show burger icon on smaller screens */
+            }
+
             .sidebar {
-                width: 200px;
+                transform: translateX(-100%); /* Hide sidebar by default */
+            }
+
+            .sidebar.active {
+                transform: translateX(0); /* Show sidebar when active */
             }
 
             .content {
-                margin-left: 200px;
+                margin-left: 0;
+                width: 100%;
             }
 
             footer {
-                margin-left: 200px;
-                width: calc(100% - 200px);
+                margin-left: 0;
+                width: 100%;
             }
 
             h1 {
@@ -112,8 +138,11 @@
     </style>
 </head>
 <body>
+    <!-- Burger Icon -->
+    <button class="burger-icon" onclick="toggleSidebar()">☰</button>
+
     <!-- Sidebar -->
-    <div class="sidebar">
+    <div class="sidebar" id="sidebar">
         <a href="home.php">Home</a>
         <a href="index.php">Movies</a>
         <a href="about.php">About</a>
@@ -133,5 +162,13 @@
     <footer>
         <p>&copy; 2024 Cinema Booking System</p>
     </footer>
+
+    <script>
+        // Toggle Sidebar
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+    </script>
 </body>
 </html>

@@ -73,7 +73,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             display: flex;
             align-items: center;
             justify-content: center;
-            
+            background: linear-gradient(120deg, #f6d365, #fda085);
+            animation: backgroundShift 10s infinite alternate;
         }
 
         @keyframes backgroundShift {
@@ -87,7 +88,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         .container {
             display: flex;
-            width: 80%;
+            width: 90%;
             max-width: 1000px;
             background: white;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
@@ -110,7 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         .left-section {
             flex: 1;
-            background: #007BFF;;
+            background: #007BFF;
             color: white;
             padding: 40px 20px;
             display: flex;
@@ -220,20 +221,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         button {
             width: 100%;
             padding: 12px;
-            background-color: #ff7e5f;
+            background-color: #007BFF;
             color: white;
             border: none;
             border-radius: 8px;
             font-size: 1em;
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.2s ease;
-            background: #007BFF;
         }
 
         button:hover {
-            background-color: #e74c3c;
+            background-color: #0056b3;
             transform: translateY(-2px);
-            background: #007BFF;
         }
 
         p {
@@ -243,14 +242,56 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         a {
-            color: #ff7e5f;
+            color: #007BFF;
             text-decoration: none;
             transition: color 0.3s ease;
-            color: #007BFF;
         }
 
         a:hover {
-            color: #007BFF;;
+            color: #0056b3;
+        }
+
+        /* Mobile responsiveness */
+        @media screen and (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                width: 90%;
+                margin: 20px;
+            }
+
+            .left-section {
+                padding: 20px;
+            }
+
+            .left-section h2 {
+                font-size: 2em;
+            }
+
+            .left-section p {
+                font-size: 1em;
+            }
+
+            .form-section {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            input[type="email"], input[type="password"] {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+
+            button {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+
+            p {
+                font-size: 0.9em;
+            }
         }
     </style>
 </head>

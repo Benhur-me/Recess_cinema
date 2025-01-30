@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Raleway:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: 'Roboto', Arial, sans-serif;
@@ -20,17 +20,17 @@
 
         /* Sidebar styling */
         .sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 250px;
-    height: 100%;
-    background-color: #007BFF;
-    color: white;
-    padding-top: 30px;
-    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-    border: px solid black;
-}
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100%;
+            background-color: #007BFF;
+            color: white;
+            padding-top: 30px;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
 
         .sidebar a {
             display: block;
@@ -38,7 +38,6 @@
             color: white;
             text-decoration: none;
             margin: 10px 0;
-            border: px solid black;
             border-left: 3px solid transparent;
             transition: all 0.3s ease;
         }
@@ -54,6 +53,7 @@
             padding: 30px;
             background-color: #fff;
             flex-grow: 1;
+            transition: margin-left 0.3s ease;
         }
 
         h1 {
@@ -107,14 +107,34 @@
             margin: 0;
         }
 
+        /* Burger Icon */
+        .burger-icon {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            color: #007BFF;
+        }
+
         /* Mobile responsiveness */
         @media screen and (max-width: 768px) {
             .sidebar {
-                width: 200px;
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
             }
 
             .content {
-                margin-left: 200px;
+                margin-left: 0;
+            }
+
+            .burger-icon {
+                display: block;
             }
 
             h1 {
@@ -129,8 +149,13 @@
 </head>
 <body>
 
+    <!-- Burger Icon -->
+    <div class="burger-icon" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </div>
+
     <!-- Sidebar -->
-    <div class="sidebar">
+    <div class="sidebar" id="sidebar">
         <a href="home.php">Home</a>
         <a href="index.php">Movies</a>
         <a href="about.php">About</a>
@@ -163,5 +188,12 @@
     <footer>
         <p>&copy; 2024 Cinema Booking System</p>
     </footer>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+    </script>
 </body>
 </html>

@@ -72,7 +72,7 @@ if (isset($_POST['book_now'])) {
     <title>Cinema Booking System</title>
     <link rel="stylesheet" href="css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* Basic styling for the page */
         * {
@@ -93,24 +93,24 @@ if (isset($_POST['book_now'])) {
 
         body {
             font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
-    background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
         }
 
         /* Sidebar Styles */
         .sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 250px;
-    height: 100%;
-    background-color: #1f1f1f;
-    color: white;
-    padding-top: 30px;
-    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-    border: px solid black;
-}
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100%;
+            background-color: #007BFF;
+            color: white;
+            padding-top: 30px;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
 
         .sidebar a {
             display: block;
@@ -118,7 +118,6 @@ if (isset($_POST['book_now'])) {
             color: white;
             text-decoration: none;
             margin: 10px 0;
-            border: px solid black;
             border-left: 3px solid transparent;
             transition: all 0.3s ease;
         }
@@ -281,13 +280,13 @@ if (isset($_POST['book_now'])) {
             padding: 10px 20px;
             border-radius: 5px;
             text-decoration: none;
-            
         }
 
         .logout-btn:hover {
             background-color: #b71c1c;
         }
-        .logout{
+
+        .logout {
             background: red;
         }
 
@@ -324,49 +323,87 @@ if (isset($_POST['book_now'])) {
         footer p {
             margin: 0;
         }
-  
 
-/* Add padding to the main content section to avoid overlap with the sidebar */
-#user-interface {
-    margin-left: 270px; /* Adjust this to add space between the sidebar and the content */
-    padding-right: 20px; /* Add space on the right side of the content */
-}
-
-
-/* Styling for movie list container */
-#movie-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-    margin-left: 20px; /* Adds a small gap between the sidebar and the content */
-}
-
-
-/* Ensure movie item does not stretch too much */
-.movie {
-    flex: 1 1 300px;
-    max-width: 300px;
-    background-color: #fff;
-    padding: 15px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
-}
-
-
-        @media screen and (max-width: 600px) {
-            nav ul {
-                flex-direction: column;
-            }
+        /* Add padding to the main content section to avoid overlap with the sidebar */
+        #user-interface {
+            margin-left: 270px; /* Adjust this to add space between the sidebar and the content */
+            padding-right: 20px; /* Add space on the right side of the content */
         }
 
+        /* Styling for movie list container */
+        #movie-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-left: 20px; /* Adds a small gap between the sidebar and the content */
+        }
+
+        /* Ensure movie item does not stretch too much */
+        .movie {
+            flex: 1 1 300px;
+            max-width: 300px;
+            background-color: #fff;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        /* Burger Icon */
+        .burger-icon {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            color: #007BFF;
+        }
+
+        /* Mobile responsiveness */
+        @media screen and (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .content {
+                margin-left: 0;
+            }
+
+            .burger-icon {
+                display: block;
+            }
+
+            #user-interface {
+                margin-left: 0;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .box-shadow {
+                padding: 20px;
+            }
+        }
     </style>
 </head>
 <body>
 
-<div class="sidebar">
+    <!-- Burger Icon -->
+    <div class="burger-icon" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
         <a href="home.php">Home</a>
         <a href="index.php">Movies</a>
         <a href="about.php">About</a>
@@ -376,12 +413,10 @@ if (isset($_POST['book_now'])) {
     </div>
 
     <header>
-        
         <nav>
             <ul>
                 <!-- Other menu items here -->
             </ul>
-            
         </nav>
     </header>
 
@@ -467,6 +502,12 @@ if (isset($_POST['book_now'])) {
                 document.getElementById('bookingErrorAlert').style.display = 'none';
             }, 5000); // Hide the alert after 5 seconds
         <?php endif; ?>
+
+        // Toggle sidebar on mobile
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
     </script>
 </body>
 </html>

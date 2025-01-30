@@ -76,7 +76,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         .container {
             display: flex;
-            width: 80%;
+            width: 90%;
             max-width: 1000px;
             background: white;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
@@ -84,6 +84,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             overflow: hidden;
             transform: translateY(20px);
             animation: slideIn 1s ease-out forwards;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .left-section {
@@ -96,6 +107,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             justify-content: center;
             text-align: center;
             animation: fadeIn 2s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         .left-section h2 {
@@ -189,6 +211,49 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         a {
             color: #007bff;
             text-decoration: none;
+        }
+
+        /* Mobile responsiveness */
+        @media screen and (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                width: 90%;
+                margin: 20px;
+            }
+
+            .left-section {
+                padding: 20px;
+            }
+
+            .left-section h2 {
+                font-size: 2em;
+            }
+
+            .left-section p {
+                font-size: 1em;
+            }
+
+            .form-section {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            input[type="email"], input[type="password"], input[type="text"] {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+
+            button {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+
+            p {
+                font-size: 0.9em;
+            }
         }
     </style>
 </head>
