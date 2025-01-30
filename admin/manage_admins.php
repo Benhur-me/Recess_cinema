@@ -34,12 +34,28 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - Manage Admins</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        /* Prevent horizontal scroll for the entire page */
+        html, body {
             margin: 0;
             padding: 0;
-            display: flex;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            font-family: Arial, sans-serif;
             background-color: #f4f4f4;
+        }
+
+        /* Burger Icon */
+        .burger-icon {
+            display: none; /* Hidden by default */
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: #007BFF;
+            cursor: pointer;
+            padding: 10px;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
         }
 
         .sidebar {
@@ -52,6 +68,7 @@ $conn->close();
             padding: 20px;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
             position: fixed;
+            transition: transform 0.3s ease;
         }
 
         .sidebar h2 {
@@ -74,18 +91,21 @@ $conn->close();
         }
 
         .content {
-            margin-left: 300px;
+            margin-left: 220px;
             padding: 20px;
             width: calc(100% - 220px);
+            transition: margin-left 0.3s ease;
         }
 
         h1 {
             font-size: 36px;
             margin-bottom: 20px;
+            text-align: left;
         }
 
         table {
             width: 100%;
+            max-width: 100%; /* Ensure table doesn't overflow */
             border-collapse: collapse;
             margin-bottom: 20px;
         }
@@ -94,6 +114,7 @@ $conn->close();
             border: 1px solid #ddd;
             padding: 10px;
             text-align: left;
+            white-space: normal; /* Allow text wrapping */
         }
 
         table th {
@@ -125,11 +146,53 @@ $conn->close();
         button:hover {
             background-color: #4cae4c;
         }
+
+        /* Responsive Styles */
+        @media (max-width: 767px) {
+            .burger-icon {
+                display: block; /* Show burger icon on smaller screens */
+            }
+
+            .sidebar {
+                transform: translateX(-100%); /* Hide sidebar by default */
+            }
+
+            .sidebar.active {
+                transform: translateX(0); /* Show sidebar when active */
+            }
+
+            .content {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            h1 {
+                font-size: 28px;
+                text-align: center;
+            }
+
+            table {
+                display: block;
+                width: 100%;
+                max-width: 100%; /* Ensure table doesn't overflow */
+            }
+
+            table td {
+                word-break: break-word; /* Break long words to prevent overflow */
+            }
+
+            table td:last-child {
+                white-space: nowrap; /* Prevent wrapping for action buttons */
+            }
+        }
     </style>
 </head>
 <body>
+<!-- Burger Icon -->
+<button class="burger-icon" onclick="toggleSidebar()">☰</button>
 
-<div class="sidebar">
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
     <h2>Admin Panel</h2>
     <a href="/cinemax/admin/dashboard.php">Dashboard</a>
     <a href="/cinemax/admin/admin.php">Manage Movies</a>
@@ -140,6 +203,7 @@ $conn->close();
     <a href="/cinemax/admin/admin_logout.php">Logout</a>
 </div>
 
+<!-- Content -->
 <div class="content">
     <h1>Manage Admins</h1>
 
@@ -180,6 +244,12 @@ $conn->close();
 </div>
 
 <script>
+    // Toggle Sidebar
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.classList.toggle('active');
+    }
+
     // Delete Admin
     function deleteAdmin(adminId) {
         if (confirm('Are you sure you want to delete this admin?')) {

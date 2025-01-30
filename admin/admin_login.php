@@ -66,19 +66,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             justify-content: center;
             align-items: center;
             height: 100vh;
-            overflow: hidden;
         }
 
         .container {
             display: flex;
+            flex-direction: column;
             width: 90%;
-            max-width: 1000px;
+            max-width: 800px;
             background-color: white;
             border-radius: 8px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
             overflow: hidden;
-            transform: scale(0.8);
-            animation: popIn 1s ease forwards;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                flex-direction: row;
+            }
         }
 
         .left-side {
@@ -86,59 +90,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             background-color: #007BFF;
             color: white;
             padding: 40px;
+            text-align: center;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: center;
-            text-align: center;
-            transform: translateX(-100%);
-            animation: slideInLeft 1s ease forwards;
         }
 
         .left-side h1 {
             font-size: 32px;
             margin-bottom: 20px;
-            opacity: 0;
-            animation: fadeIn 1.5s ease forwards 0.5s;
         }
 
         .left-side p {
             font-size: 18px;
             line-height: 1.5;
-            opacity: 0;
-            animation: fadeIn 1.5s ease forwards 0.8s;
         }
 
         .right-side {
             flex: 1;
             padding: 40px;
-            transform: translateX(100%);
-            animation: slideInRight 1s ease forwards;
         }
 
-        /* Login form styles */
         .login-container {
-            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
         }
 
         .login-container h2 {
             text-align: center;
             margin-bottom: 30px;
             font-size: 28px;
-            opacity: 0;
-            animation: fadeIn 1.5s ease forwards 0.5s;
-        }
-
-        .login-container .icon {
-            text-align: center;
-            margin-bottom: 20px;
-            opacity: 0;
-            animation: fadeIn 1.5s ease forwards 0.3s;
-        }
-
-        .login-container .icon i {
-            font-size: 50px;
-            color: #007BFF;
         }
 
         .login-container .form-group {
@@ -148,6 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .login-container .form-group label {
             font-size: 14px;
             font-weight: bold;
+            display: block;
         }
 
         .login-container .form-group input {
@@ -158,16 +140,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             border: 2px solid #ddd;
             background-color: #f9f9f9;
             font-size: 16px;
-            color: #333;
-            transition: border 0.3s, box-shadow 0.3s, transform 0.2s;
         }
 
         .login-container .form-group input:focus {
             border: 2px solid #007BFF;
             background-color: #ffffff;
-            box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
             outline: none;
-            transform: scale(1.05);
         }
 
         .login-container .btn {
@@ -179,27 +157,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             border-radius: 8px;
             font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
         }
 
         .login-container .btn:hover {
             background-color: #0056b3;
-            transform: scale(1.05);
         }
 
         .login-container .error {
             color: red;
             font-size: 14px;
             margin-bottom: 10px;
-            opacity: 0;
-            animation: fadeIn 1.5s ease forwards 0.7s;
         }
 
         .login-container .footer {
             text-align: center;
             margin-top: 20px;
-            opacity: 0;
-            animation: fadeIn 1.5s ease forwards 1s;
         }
 
         .login-container .footer a {
@@ -210,66 +182,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .login-container .footer a:hover {
             text-decoration: underline;
         }
-
-        /* Animations */
-        @keyframes slideInLeft {
-            0% {
-                transform: translateX(-100%);
-            }
-            100% {
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes slideInRight {
-            0% {
-                transform: translateX(100%);
-            }
-            100% {
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes fadeIn {
-            0% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-
-        @keyframes popIn {
-            0% {
-                transform: scale(0.8);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Left Side -->
         <div class="left-side">
-            <h1>Welcome to Admin Portal</h1>
-            <p>
-                Manage your website effectively through the admin panel. 
-                Here, you can oversee user activity, update content, 
-                and ensure the smooth operation of the platform.
-            </p>
+            <h1>Welcome, Admin!</h1>
+            <p>Log in to access the admin dashboard, manage users, and oversee operations efficiently.</p>
         </div>
-
-        <!-- Right Side -->
         <div class="right-side">
             <div class="login-container">
-                <div class="icon">
-                    <i class="fas fa-user-circle"></i>
-                </div>
                 <h2>Admin Login</h2>
-                <?php if (isset($error)) { echo "<div class='error'>$error</div>"; } ?>
-                <form action="admin_login.php" method="POST">
+                <?php if (!empty($error)): ?>
+                    <div class="error"><?php echo $error; ?></div>
+                <?php endif; ?>
+                <form method="POST" action="">
                     <div class="form-group">
                         <label for="email">Email</label>
                         <input type="email" name="email" id="email" placeholder="Enter your email" required>
@@ -280,12 +207,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                     <button type="submit" class="btn">Login</button>
                 </form>
-                <!-- <div class="footer">
-                    <p>Don't have an account? <a href="admin_register.php">Register here</a></p>
-                </div> -->
+                <div class="footer">
+                    <p><a href="#">Forgot password?</a></p>
+                </div>
             </div>
         </div>
     </div>
 </body>
 </html>
-

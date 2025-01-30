@@ -42,7 +42,23 @@ $total_reports = $conn->query("SELECT COUNT(*) AS total FROM messages")->fetch_a
             margin: 0;
             padding: 0;
             display: flex;
+            flex-direction: column;
             background-color: #f4f4f4;
+        }
+
+        /* Burger Icon */
+        .burger-icon {
+            display: none; /* Hidden by default */
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: #007BFF;
+            cursor: pointer;
+            padding: 10px;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
         }
 
         /* Sidebar Styles */
@@ -56,6 +72,9 @@ $total_reports = $conn->query("SELECT COUNT(*) AS total FROM messages")->fetch_a
             padding: 20px;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
             position: fixed;
+            top: 0;
+            left: 0;
+            transition: transform 0.3s ease;
         }
 
         .sidebar h2 {
@@ -79,19 +98,22 @@ $total_reports = $conn->query("SELECT COUNT(*) AS total FROM messages")->fetch_a
 
         /* Main Content Styles */
         .content {
-            margin-left: 300px;
+            margin-left: 220px;
             padding: 20px;
             width: calc(100% - 220px);
+            transition: margin-left 0.3s ease;
         }
 
         h1 {
-            font-size: 36px;
+            font-size: 28px;
             margin-bottom: 20px;
+            margin-left: 25px;
         }
 
         .dashboard-cards {
             display: flex;
             gap: 20px;
+            flex-wrap: wrap;
         }
 
         .card {
@@ -99,18 +121,19 @@ $total_reports = $conn->query("SELECT COUNT(*) AS total FROM messages")->fetch_a
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            flex: 1;
+            flex: 1 1 calc(50% - 20px);
+            min-width: 200px;
             text-align: center;
             cursor: pointer;
         }
 
         .card h3 {
-            font-size: 24px;
+            font-size: 18px;
             margin-bottom: 10px;
         }
 
         .card p {
-            font-size: 36px;
+            font-size: 24px;
             font-weight: bold;
             color: #007BFF;
         }
@@ -141,11 +164,98 @@ $total_reports = $conn->query("SELECT COUNT(*) AS total FROM messages")->fetch_a
         .welcome-message.hidden {
             opacity: 0;
         }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .burger-icon {
+                display: block; /* Show burger icon on smaller screens */
+            }
+
+            .sidebar {
+                transform: translateX(-100%); /* Hide sidebar by default */
+            }
+
+            .sidebar.active {
+                transform: translateX(0); /* Show sidebar when active */
+            }
+
+            .content {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .sidebar {
+                width: 150px;
+                padding: 10px;
+            }
+
+            .sidebar h2 {
+                font-size: 20px;
+            }
+
+            .sidebar a {
+                padding: 8px 10px;
+                font-size: 14px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .card h3 {
+                font-size: 16px;
+            }
+
+            .card p {
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar {
+                width: 100px;
+            }
+
+            .sidebar h2 {
+                font-size: 16px;
+            }
+
+            .sidebar a {
+                font-size: 12px;
+                padding: 5px 8px;
+            }
+
+            .content {
+                margin-left: 110px;
+                width: calc(100% - 110px);
+                padding: 5px;
+            }
+
+            .dashboard-cards {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .card {
+                flex: 1 1 100%;
+            }
+
+            .card h3 {
+                font-size: 14px;
+            }
+
+            .card p {
+                font-size: 18px;
+            }
+        }
     </style>
 </head>
 <body>
+<!-- Burger Icon -->
+<button class="burger-icon" onclick="toggleSidebar()">☰</button>
 
-<div class="sidebar">
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
     <h2>Admin Panel</h2>
     <a href="/cinemax/admin/dashboard.php">Dashboard</a>
     <a href="/cinemax/admin/admin.php">Manage Movies</a>
@@ -189,6 +299,12 @@ $total_reports = $conn->query("SELECT COUNT(*) AS total FROM messages")->fetch_a
 </div>
 
 <script>
+    // Toggle Sidebar
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.classList.toggle('active');
+    }
+
     // Hide the welcome message after 3 seconds
     setTimeout(() => {
         const message = document.getElementById('welcomeMessage');

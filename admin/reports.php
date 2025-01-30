@@ -56,6 +56,22 @@ if (!$result) {
             padding: 0;
             display: flex;
             background-color: #f4f4f4;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        /* Burger Icon */
+        .burger-icon {
+            display: none; /* Hidden by default */
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: #007BFF;
+            cursor: pointer;
+            padding: 10px;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
         }
 
         /* Sidebar Styles */
@@ -69,6 +85,7 @@ if (!$result) {
             padding: 20px;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
             position: fixed;
+            transition: transform 0.3s ease;
         }
 
         .sidebar h2 {
@@ -92,9 +109,10 @@ if (!$result) {
 
         /* Main Content Styles */
         .content {
-            margin-left: 220px; /* Adjusted for sidebar */
+            margin-left: 220px;
             padding: 20px;
-            width: calc(100% - 220px); /* Ensure full width minus the sidebar */
+            width: calc(100% - 220px);
+            transition: margin-left 0.3s ease;
         }
 
         h1 {
@@ -104,6 +122,7 @@ if (!$result) {
 
         table {
             width: 100%;
+            max-width: 100%; /* Ensure table doesn't overflow */
             border-collapse: collapse;
         }
 
@@ -129,11 +148,66 @@ if (!$result) {
         .delete-button:hover {
             background-color: #d32f2f;
         }
+
+        /* Responsive Styles */
+        @media (max-width: 767px) {
+    .burger-icon {
+        display: block; /* Show burger icon on smaller screens */
+    }
+
+    .sidebar {
+        transform: translateX(-100%); /* Hide sidebar by default */
+    }
+
+    .sidebar.active {
+        transform: translateX(0); /* Show sidebar when active */
+    }
+
+    .content {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    h1 {
+        font-size: 28px;
+        text-align: center;
+    }
+
+    table {
+        display: block;
+        width: 100%;
+        overflow-x: auto; /* Allow table scrolling */
+        white-space: nowrap; /* Prevent text wrapping in table cells */
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: left;
+        border: 1px solid #ddd;
+    }
+
+    td:last-child {
+        min-width: 100px; /* Ensures the action column doesn't shrink */
+    }
+
+    /* Make delete button always visible */
+    .delete-button {
+        display: inline-block;
+        width: 100%;
+        text-align: center;
+        padding: 8px;
+        font-size: 14px;
+    }
+}
+
     </style>
 </head>
 <body>
+<!-- Burger Icon -->
+<button class="burger-icon" onclick="toggleSidebar()">☰</button>
 
-<div class="sidebar">
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
     <h2>Admin Panel</h2>
     <a href="/cinemax/admin/dashboard.php">Dashboard</a>
     <a href="/cinemax/admin/admin.php">Manage Movies</a>
@@ -144,6 +218,7 @@ if (!$result) {
     <a href="/cinemax/admin/admin_logout.php">Logout</a>
 </div>
 
+<!-- Content -->
 <div class="content">
     <h1>Reports</h1>
     <table>
@@ -174,6 +249,14 @@ if (!$result) {
         </tbody>
     </table>
 </div>
+
+<script>
+    // Toggle Sidebar
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.classList.toggle('active');
+    }
+</script>
 
 </body>
 </html>

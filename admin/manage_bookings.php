@@ -30,11 +30,27 @@ $result = $conn->query($sql);
             padding: 0;
             display: flex;
             background-color: #f4f4f4;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        /* Burger Icon */
+        .burger-icon {
+            display: none; /* Hidden by default */
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: #007BFF;
+            cursor: pointer;
+            padding: 10px;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
         }
 
         /* Sidebar Styles */
         .sidebar {
-            width: 200px; /* Adjusted width */
+            width: 200px;
             height: 100vh;
             background-color: #007BFF;
             color: white;
@@ -43,6 +59,7 @@ $result = $conn->query($sql);
             padding: 20px;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
             position: fixed;
+            transition: transform 0.3s ease;
         }
 
         .sidebar h2 {
@@ -66,9 +83,10 @@ $result = $conn->query($sql);
 
         /* Main Content Styles */
         .content {
-            margin-left: 270px; /* Adjust to fit sidebar width */
+            margin-left: 220px;
             padding: 20px;
-            width: calc(100% - 240px); /* Adjust for sidebar */
+            width: calc(100% - 220px);
+            transition: margin-left 0.3s ease;
         }
 
         h1 {
@@ -78,6 +96,7 @@ $result = $conn->query($sql);
 
         table {
             width: 100%;
+            max-width: 100%; /* Ensure table doesn't overflow */
             border-collapse: collapse;
             margin-top: 20px;
         }
@@ -96,11 +115,45 @@ $result = $conn->query($sql);
         td {
             background-color: #f9f9f9;
         }
+
+        /* Responsive Styles */
+        @media (max-width: 767px) {
+            .burger-icon {
+                display: block; /* Show burger icon on smaller screens */
+            }
+
+            .sidebar {
+                transform: translateX(-100%); /* Hide sidebar by default */
+            }
+
+            .sidebar.active {
+                transform: translateX(0); /* Show sidebar when active */
+            }
+
+            .content {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            h1 {
+                font-size: 28px;
+                text-align: center;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto; /* Allow table scrolling */
+                white-space: nowrap; /* Prevent text wrapping in table cells */
+            }
+        }
     </style>
 </head>
 <body>
+<!-- Burger Icon -->
+<button class="burger-icon" onclick="toggleSidebar()">☰</button>
 
-<div class="sidebar">
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
     <h2>Admin Panel</h2>
     <a href="/cinemax/admin/dashboard.php">Dashboard</a>
     <a href="/cinemax/admin/admin.php">Manage Movies</a>
@@ -111,6 +164,7 @@ $result = $conn->query($sql);
     <a href="/cinemax/admin/admin_logout.php">Logout</a>
 </div>
 
+<!-- Content -->
 <div class="content">
     <h1>Manage Bookings</h1>
     <table>
@@ -132,6 +186,14 @@ $result = $conn->query($sql);
         <?php endif; ?>
     </table>
 </div>
+
+<script>
+    // Toggle Sidebar
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.classList.toggle('active');
+    }
+</script>
 
 </body>
 </html>

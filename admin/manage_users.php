@@ -10,7 +10,24 @@
             margin: 0;
             padding: 0;
             display: flex;
+            flex-direction: column;
             background-color: #f4f4f4;
+            overflow-x: hidden; /* Prevent horizontal scroll for the entire page */
+        }
+
+        /* Burger Icon */
+        .burger-icon {
+            display: none; /* Hidden by default */
+            font-size: 24px;
+            background: none;
+            border: none;
+            color: #007BFF;
+            cursor: pointer;
+            padding: 10px;
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
         }
 
         .sidebar {
@@ -23,6 +40,7 @@
             padding: 20px;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
             position: fixed;
+            transition: transform 0.3s ease;
         }
 
         .sidebar h2 {
@@ -48,30 +66,33 @@
             margin-left: 220px;
             padding: 20px;
             width: calc(100% - 220px);
+            transition: margin-left 0.3s ease;
         }
 
         h1 {
             font-size: 36px;
             margin-bottom: 20px;
-            margin-left: 30px;
+            text-align: left;
         }
 
         table {
             width: 100%;
+            max-width: 100%; /* Ensure table doesn't overflow */
             border-collapse: collapse;
             margin-bottom: 20px;
-            margin-left: 30px;
+            table-layout: fixed; /* Ensure table columns have fixed widths */
         }
 
         table th, table td {
             border: 1px solid #ddd;
             padding: 10px;
             text-align: left;
+            white-space: normal; /* Allow text wrapping */
+            word-break: break-word; /* Break long words to prevent overflow */
         }
 
         table th {
             background-color: #f4f4f4;
-            
         }
 
         button {
@@ -86,10 +107,49 @@
         button:hover {
             background-color: #c9302c;
         }
+
+        /* Responsive Styles */
+        @media (max-width: 767px) {
+            .burger-icon {
+                display: block; /* Show burger icon on smaller screens */
+            }
+
+            .sidebar {
+                transform: translateX(-100%); /* Hide sidebar by default */
+            }
+
+            .sidebar.active {
+                transform: translateX(0); /* Show sidebar when active */
+            }
+
+            .content {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            h1 {
+                font-size: 28px;
+                text-align: center;
+            }
+
+            table {
+                display: block;
+                width: 100%;
+                max-width: 100%; /* Ensure table doesn't overflow */
+            }
+
+            table td:last-child {
+                white-space: nowrap; /* Prevent wrapping for action buttons */
+            }
+        }
     </style>
 </head>
 <body>
-<div class="sidebar">
+<!-- Burger Icon -->
+<button class="burger-icon" onclick="toggleSidebar()">☰</button>
+
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
     <h2>Admin Panel</h2>
     <a href="/cinemax/admin/dashboard.php">Dashboard</a>
     <a href="/cinemax/admin/admin.php">Manage Movies</a>
@@ -100,16 +160,17 @@
     <a href="/cinemax/admin/logout.php">Logout</a>
 </div>
 
+<!-- Content -->
 <div class="content">
     <h1>Manage Users</h1>
     <table id="users-table">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Actions</th>
+                <th style="width: 10%;">ID</th>
+                <th style="width: 25%;">Name</th>
+                <th style="width: 35%;">Email</th>
+                <th style="width: 20%;">Phone</th>
+                <th style="width: 10%;">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -119,6 +180,12 @@
 </div>
 
 <script>
+    // Toggle Sidebar
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.classList.toggle('active');
+    }
+
     // Fetch Users from the server
     function fetchUsers() {
         fetch('fetch_users.php')
