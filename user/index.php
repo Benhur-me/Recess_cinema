@@ -415,7 +415,7 @@ footer p {
     <header>
         <nav>
             <ul>
-                <!-- Other menu items here -->
+                
             </ul>
         </nav>
     </header>
