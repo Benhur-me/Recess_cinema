@@ -33,12 +33,12 @@ if (!empty($name)) {
 if (isset($_POST['book_now'])) {
     $movie_id = $_POST['movie_id']; // Get the movie ID from the form submission
 
-    // Fetch the price of the selected movie
-    $movie_sql = "SELECT price FROM movies WHERE id = ?";
+    // Fetch the price and title of the selected movie
+    $movie_sql = "SELECT price, title FROM movies WHERE id = ?";
     $stmt = $conn->prepare($movie_sql);
     $stmt->bind_param("i", $movie_id);
     $stmt->execute();
-    $stmt->bind_result($price);
+    $stmt->bind_result($price, $movie_title);
     $stmt->fetch();
     $stmt->close();
 
@@ -48,9 +48,10 @@ if (isset($_POST['book_now'])) {
     $stmt->bind_param("ii", $user_id, $movie_id);
 
     if ($stmt->execute()) {
-        // Redirect after successful booking to prevent form resubmission on page refresh
-        $_SESSION['booking_success'] = true;  // Store success flag in session
-        $_SESSION['movie_price'] = $price;   // Store movie price in session
+        // Store success flag, movie title, and price in session
+        $_SESSION['booking_success'] = true;
+        $_SESSION['movie_price'] = $price;
+        $_SESSION['movie_title'] = $movie_title;
         header('Location: ' . $_SERVER['PHP_SELF']);  // Redirect to the same page
         exit();
     } else {
@@ -74,325 +75,324 @@ if (isset($_POST['book_now'])) {
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* Basic styling for the page */
-        * {
-            font-family: 'Roboto', Arial, sans-serif;
-            font-style: normal;
-            font-weight: 400;
-        }
+        {
+    font-family: 'Roboto', Arial, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+}
 
-        html, body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Roboto', Arial, sans-serif;
-            font-size: 16px;
-            font-style: normal;
-            font-weight: 400;
-            line-height: 1.5;
-        }
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', Arial, sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.5;
+}
 
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
 
-        /* Sidebar Styles */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 250px;
-            height: 100%;
-            background-color: #007BFF;
-            color: white;
-            padding-top: 30px;
-            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-        }
+/* Sidebar Styles */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100%;
+    background-color: #007BFF;
+    color: white;
+    padding-top: 30px;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
 
-        .sidebar a {
-            display: block;
-            padding: 15px;
-            color: white;
-            text-decoration: none;
-            margin: 10px 0;
-            border-left: 3px solid transparent;
-            transition: all 0.3s ease;
-        }
+.sidebar a {
+    display: block;
+    padding: 15px;
+    color: white;
+    text-decoration: none;
+    margin: 10px 0;
+    border-left: 3px solid transparent;
+    transition: all 0.3s ease;
+}
 
-        .sidebar a:hover {
-            border-left: 3px solid #ff6f61;
-            background-color: #575757;
-        }
+.sidebar a:hover {
+    border-left: 3px solid #ff6f61;
+    background-color: #575757;
+}
 
-        h3 {
-            font-size: 24px;
-            color: #333;
-        }
+h3 {
+    font-size: 24px;
+    color: #333;
+}
 
-        .movie {
-            background-color: #fff;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+.movie {
+    background-color: #fff;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
-        .movie p {
-            font-size: 18px;
-            color: #555;
-        }
+.movie p {
+    font-size: 18px;
+    color: #555;
+}
 
-        .movie img {
-            max-width: 200px;
-            max-height: 300px;
-            border-radius: 5px;
-            margin-top: 10px;
-        }
+.movie img {
+    max-width: 200px;
+    max-height: 300px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
 
-        .movie p, .movie h3 {
-            margin: 10px 0;
-        }
+.movie p, .movie h3 {
+    margin: 10px 0;
+}
 
-        /* Style for user initials in a circle */
-        .user-initials {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 40px;
-            height: 40px;
-            background-color: #4CAF50;
-            color: white;
-            font-size: 20px;
-            font-weight: bold;
-            text-align: center;
-            line-height: 40px;
-            border-radius: 50%;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+/* Style for user initials in a circle */
+.user-initials {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
-        /* Style for the "Book Now" button */
-        .book-now-btn {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            font-size: 16px;
-            text-align: center;
-            border-radius: 5px;
-            text-decoration: none;
-            cursor: pointer;
-        }
+/* Style for the "Book Now" button */
+.book-now-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 16px;
+    text-align: center;
+    border-radius: 5px;
+    text-decoration: none;
+    cursor: pointer;
+}
 
-        .book-now-btn:hover {
-            background-color: #45a049;
-        }
+.book-now-btn:hover {
+    background-color: #45a049;
+}
 
-        /* Styling for the alert message */
-        .alert {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            padding: 15px;
-            background-color: #4CAF50;
-            color: white;
-            font-size: 18px;
-            text-align: center;
-            z-index: 9999;
-            display: none;
-        }
+/* Styling for the alert message */
+.alert {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 15px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 18px;
+    text-align: center;
+    z-index: 9999;
+    display: none;
+}
 
-        /* Style for error alert */
-        .alert.error {
-            background-color: red;
-        }
+/* Style for error alert */
+.alert.error {
+    background-color: red;
+}
 
-        /* Styling for movie list container */
-        #movie-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-        }
+/* Styling for movie list container */
+#movie-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
 
-        .movie {
-            flex: 1 1 300px;
-            max-width: 300px;
-            background-color: #fff;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
+.movie {
+    flex: 1 1 300px;
+    max-width: 300px;
+    background-color: #fff;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
 
-        .movie img {
-            width: 100%;
-            height: auto;
-            border-radius: 5px;
-            margin-top: 10px;
-        }
+.movie img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-top: 10px;
+}
 
-        .book-now-btn {
-            display: inline-block;
-            margin-top: 10px;
-        }
+.book-now-btn {
+    display: inline-block;
+    margin-top: 10px;
+}
 
-        nav ul {
-            display: flex;
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            background-color: #333;
-            overflow: hidden;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 100;
-        }
+nav ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background-color: #333;
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 100;
+}
 
-        nav ul li {
-            flex: 1;
-            text-align: center;
-        }
+nav ul li {
+    flex: 1;
+    text-align: center;
+}
 
-        nav ul li a {
-            display: block;
-            padding: 10px 20px;
-            text-decoration: none;
-            color: white;
-            background-color: #333;
-        }
+nav ul li a {
+    display: block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: white;
+    background-color: #333;
+}
 
-        nav ul li a:hover {
-            background-color: #555;
-        }
+nav ul li a:hover {
+    background-color: #555;
+}
 
-        .logout-btn {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            background-color: #d32f2f;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            text-decoration: none;
-        }
+.logout-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background-color: #d32f2f;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+}
 
-        .logout-btn:hover {
-            background-color: #b71c1c;
-        }
+.logout-btn:hover {
+    background-color: #b71c1c;
+}
 
-        .logout {
-            background: red;
-        }
+.logout {
+    background: red;
+}
 
-        body, .sidebar, .movie, nav ul, .book-now-btn, .alert, .user-initials {
-            font-family: "Roboto", Arial, sans-serif;
-        }
+body, .sidebar, .movie, nav ul, .book-now-btn, .alert, .user-initials {
+    font-family: "Roboto", Arial, sans-serif;
+}
 
-        .sidebar {
-            font-size: 16px;
-            line-height: 1.5;
-            background-color: #007BFF;
-        }
+.sidebar {
+    font-size: 16px;
+    line-height: 1.5;
+    background-color: #007BFF;
+}
 
-        .movie {
-            font-size: 14px;
-            line-height: 1.6;
-        }
+.movie {
+    font-size: 14px;
+    line-height: 1.6;
+}
 
-        .book-now-btn, .logout-btn {
-            font-family: "Roboto", Arial, sans-serif;
-            font-weight: bold;
-        }
+.book-now-btn, .logout-btn {
+    font-family: "Roboto", Arial, sans-serif;
+    font-weight: bold;
+}
 
-        footer {
-            background-color: #007BFF;
-            color: white;
-            text-align: center;
-            padding: 15px;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
+footer {
+    background-color: #007BFF;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
 
-        footer p {
-            margin: 0;
-        }
+footer p {
+    margin: 0;
+}
 
-        /* Add padding to the main content section to avoid overlap with the sidebar */
-        #user-interface {
-            margin-left: 270px; /* Adjust this to add space between the sidebar and the content */
-            padding-right: 20px; /* Add space on the right side of the content */
-        }
+/* Add padding to the main content section to avoid overlap with the sidebar */
+#user-interface {
+    margin-left: 270px; /* Adjust this to add space between the sidebar and the content */
+    padding-right: 20px; /* Add space on the right side of the content */
+}
 
-        /* Styling for movie list container */
-        #movie-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-            margin-left: 20px; /* Adds a small gap between the sidebar and the content */
-        }
+/* Styling for movie list container */
+#movie-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin-left: 20px; /* Adds a small gap between the sidebar and the content */
+}
 
-        /* Ensure movie item does not stretch too much */
-        .movie {
-            flex: 1 1 300px;
-            max-width: 300px;
-            background-color: #fff;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
+/* Ensure movie item does not stretch too much */
+.movie {
+    flex: 1 1 300px;
+    max-width: 300px;
+    background-color: #fff;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
 
-        /* Burger Icon */
-        .burger-icon {
-            display: none;
-            font-size: 24px;
-            cursor: pointer;
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 1000;
-            color: #007BFF;
-        }
+/* Burger Icon */
+.burger-icon {
+    display: none;
+    font-size: 24px;
+    cursor: pointer;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+    color: #007BFF;
+}
 
-        /* Mobile responsiveness */
-        @media screen and (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
+/* Mobile responsiveness */
+@media screen and (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
 
-            .sidebar.active {
-                transform: translateX(0);
-            }
+    .sidebar.active {
+        transform: translateX(0);
+    }
 
-            .content {
-                margin-left: 0;
-            }
+    .content {
+        margin-left: 0;
+    }
 
-            .burger-icon {
-                display: block;
-            }
+    .burger-icon {
+        display: block;
+    }
 
-            #user-interface {
-                margin-left: 0;
-            }
+    #user-interface {
+        margin-left: 0;
+    }
 
-            h1 {
-                font-size: 28px;
-            }
+    h1 {
+        font-size: 28px;
+    }
 
-            .box-shadow {
-                padding: 20px;
-            }
-        }
+    .box-shadow {
+        padding: 20px;
+    }
+}
     </style>
 </head>
 <body>
@@ -421,9 +421,9 @@ if (isset($_POST['book_now'])) {
     </header>
 
     <!-- User Initials in a Circle -->
-    <div class="user-initials">
+    <a href="accounts.php"><div class="user-initials">
         <?php echo $initials; ?>
-    </div>
+    </div></a>
 
     <main>
         <section id="user-interface">
@@ -470,14 +470,6 @@ if (isset($_POST['book_now'])) {
         <p>&copy; 2024 Cinema Booking System</p>
     </footer>
 
-    <!-- Booking Success Message -->
-    <?php if (isset($_SESSION['booking_success']) && $_SESSION['booking_success']): ?>
-        <div class="alert" id="bookingSuccessAlert">
-            Booking successfully completed! Amount to pay: UGX <?php echo $_SESSION['movie_price']; ?>
-        </div>
-        <?php unset($_SESSION['booking_success']); ?>
-    <?php endif; ?>
-
     <!-- Booking Error Message -->
     <?php if (isset($_SESSION['booking_error']) && $_SESSION['booking_error']): ?>
         <div class="alert error" id="bookingErrorAlert">
@@ -489,10 +481,12 @@ if (isset($_POST['book_now'])) {
     <script>
         // Show the success alert when booking is successful
         <?php if (isset($_SESSION['booking_success']) && $_SESSION['booking_success']): ?>
-            document.getElementById('bookingSuccessAlert').style.display = 'block';
-            setTimeout(function() {
-                document.getElementById('bookingSuccessAlert').style.display = 'none';
-            }, 5000); // Hide the alert after 5 seconds
+            alert("You've successfully booked for <?php echo $_SESSION['movie_title']; ?> & pay UGX <?php echo $_SESSION['movie_price']; ?> at the cinema cashier.");
+            <?php
+            unset($_SESSION['booking_success']);
+            unset($_SESSION['movie_price']);
+            unset($_SESSION['movie_title']);
+            ?>
         <?php endif; ?>
 
         // Show the error alert when booking fails
