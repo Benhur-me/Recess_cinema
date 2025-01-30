@@ -36,42 +36,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_movie'])) {
             $poster_filename = ''; // If no new poster uploaded, keep the old one
         }
     } else {
-        // If no new poster, keep the old one
-        $poster_filename = $_POST['existing_poster'];
-    }
+// If no new poster, keep the old one
+$poster_filename = $_POST['existing_poster'];
+}
 
-    // Update movie details
-    $sql_update = "UPDATE movies SET title = '$title', show_time = '$show_time', price = '$price', poster = '$poster_filename' WHERE id = $movie_id";
+// Update movie details
+$sql_update = "UPDATE movies SET title = '$title', show_time = '$show_time', price = '$price', poster = '$poster_filename' WHERE id = $movie_id";
 
-    if ($conn->query($sql_update) === TRUE) {
-        echo "<p>Movie updated successfully!</p>";
-    } else {
-        echo "<p>Error updating movie: " . $conn->error . "</p>";
-    }
+if ($conn->query($sql_update) === TRUE) {
+    echo "<p>Movie updated successfully!</p>";
+} else {
+    echo "<p>Error updating movie: " . $conn->error . "</p>";
+}
 }
 
 // Handle adding a new movie
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_movie'])) {
-    $title = $_POST['title'];
-    $show_time = $_POST['show_time'];
-    $price = $_POST['price'];
-    $poster = $_FILES['poster'];
+$title = $_POST['title'];
+$show_time = $_POST['show_time'];
+$price = $_POST['price'];
+$poster = $_FILES['poster'];
 
-    // Handle poster upload
-    $target_dir = "../uploads/";
-    $target_file = $target_dir . basename($poster['name']);
-    if (move_uploaded_file($poster['tmp_name'], $target_file)) {
-        $poster_filename = basename($poster['name']);
-        // Insert movie details into the database
-        $sql_insert = "INSERT INTO movies (title, show_time, price, poster) VALUES ('$title', '$show_time', '$price', '$poster_filename')";
-        if ($conn->query($sql_insert) === TRUE) {
-            echo "<p>New movie added successfully!</p>";
-        } else {
-            echo "<p>Error adding the movie: " . $conn->error . "</p>";
-        }
+// Handle poster upload
+$target_dir = "../uploads/";
+$target_file = $target_dir . basename($poster['name']);
+if (move_uploaded_file($poster['tmp_name'], $target_file)) {
+    $poster_filename = basename($poster['name']);
+    // Insert movie details into the database
+    $sql_insert = "INSERT INTO movies (title, show_time, price, poster) VALUES ('$title', '$show_time', '$price', '$poster_filename')";
+    if ($conn->query($sql_insert) === TRUE) {
+        echo "<p>New movie added successfully!</p>";
     } else {
-        echo "<p>Error uploading the poster.</p>";
+        echo "<p>Error adding the movie: " . $conn->error . "</p>";
     }
+} else {
+    echo "<p>Error uploading the poster.</p>";
+}
 }
 
 // Fetch all movies for display
@@ -81,9 +81,9 @@ $result = $conn->query($sql);
 // Fetch movie details for editing
 $movie_to_edit = null;
 if (isset($_GET['edit_id'])) {
-    $movie_id = $_GET['edit_id'];
-    $sql_edit = "SELECT * FROM movies WHERE id = $movie_id";
-    $movie_to_edit = $conn->query($sql_edit)->fetch_assoc();
+$movie_id = $_GET['edit_id'];
+$sql_edit = "SELECT * FROM movies WHERE id = $movie_id";
+$movie_to_edit = $conn->query($sql_edit)->fetch_assoc();
 }
 ?>
 
@@ -93,6 +93,7 @@ if (isset($_GET['edit_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - Manage Movies</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -112,6 +113,7 @@ if (isset($_GET['edit_id'])) {
             padding: 20px;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
             position: fixed;
+            transition: transform 0.3s ease;
         }
 
         .sidebar h2 {
@@ -134,11 +136,11 @@ if (isset($_GET['edit_id'])) {
         }
 
         .content {
-            margin-left: 300px;
+            margin-left: 220px;
             padding: 20px;
             width: calc(100% - 220px);
+            transition: margin-left 0.3s ease;
         }
-
         h1 {
             font-size: 36px;
             margin-bottom: 20px;
@@ -158,12 +160,11 @@ if (isset($_GET['edit_id'])) {
         }
 
         .movie img {
-            max-width: 200px;
-            max-height: 300px;
+            max-width: 100%;
+            height: auto;
             border-radius: 5px;
             margin-top: 10px;
         }
-
         .button {
             padding: 10px 20px;
             background-color: #007BFF;
@@ -190,11 +191,44 @@ if (isset($_GET['edit_id'])) {
             width: 100%;
             margin-bottom: 10px;
         }
+        .burger-icon {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            color: #007BFF;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .content {
+                margin-left: 0;
+            }
+
+            .burger-icon {
+                display: block;
+            }
+        }
     </style>
+
 </head>
 <body>
 
-<div class="sidebar">
+<div class="burger-icon" onclick="toggleSidebar()">
+    <i class="fas fa-bars"></i>
+</div>
+
+<div class="sidebar" id="sidebar">
     <h2>Admin Panel</h2>
     <a href="/cinemax/admin/dashboard.php">Dashboard</a>
     <a href="/cinemax/admin/admin.php">Manage Movies</a>
@@ -212,7 +246,6 @@ if (isset($_GET['edit_id'])) {
     <form method="POST" action="admin.php" enctype="multipart/form-data">
         <label for="title">Movie Title:</label><br>
         <input type="text" id="title" name="title" required><br><br>
-
         <label for="show_time">Show Time:</label><br>
         <input type="datetime-local" id="show_time" name="show_time" required><br><br>
 
@@ -267,7 +300,12 @@ if (isset($_GET['edit_id'])) {
     ?>
 </div>
 
-
+<script>
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.classList.toggle('active');
+    }
+</script>
 
 </body>
 </html>
